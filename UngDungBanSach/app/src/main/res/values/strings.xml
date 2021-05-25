@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">UngDungBanSach</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="ttHome">Trang chủ</string>
+    <string name="ttDashboard">Danh mục</string>
+    <string name="ttCart">Giỏ hàng</string>
+    <string name="ttNoti">Thông báo</string>
+    <string name="ttAccount">Tài khoản</string>
+    <!--Form Đăng Ký-->
+    <string name="edtHoTen">Họ và tên</string>
+    <string name="edtTenDangNhap">Tên đăng nhập</string>
+    <string name="edtMatKhau">Mật khẩu</string>
+    <string name="edtXacNhanMK">Xác nhận mật khẩu</string>
+    <string name="edtEmail">Email</string>
+    <string name="edtSDT">Số điện thoại</string>
+    <string name="rdBtnNam">Nam</string>
+    <string name="rdBtnNu">Nữ</string>
+    <string name="txtGioiTinh">Giới tính</string>
+    <string name="btnDangKy">Đăng Ký</string>
+    <string name="btnDangNhap">Đăng Nhập</string>
+    <string name="edtNgaySinh">Ngày sinh</string>
+    <string name="dialogChonNgaySinh">Chọn ngày sinh</string>
+    <!---->
+    <string name="txtChuaCoTK">Bạn chưa có tài khoản?</string>
+    <string name="txtDaCoTK">Bạn đã có tài khoản?</string>
+    <string name="txtHienThiMK">Hiển thị mật khẩu</string>
+    <string name="txtQuenMK">Quên mật khẩu?</string>
+    <string name="txtDangKyTK">Đăng ký tài khoản</string>
+    <!---->
+    <string name="hintTenDN">Nhập tên đăng nhập</string>
+    <string name="hintMK">Nhập mật khẩu</string>
+    <string name="txtQuenMK1">Nhập địa chỉ Email bạn đã đăng ký. Hệ thống sẽ gửi mật khẩu đến địa chỉ Email của bạn.</string>
+    <string name="txtQuenMK2"></string>
+    <string name="txtBtnQuenMK">Nhận lại mật khẩu</string>
+    <!---->
+    <string name="txtDNN">Đăng nhập ngay</string>
+    <string name="edtHintDKN">Đăng ký ngay</string>
+    <!--Button-->
+    <string name="btnInfoUserThongTin">Thông tin cá nhân</string>
+    <string name="btnInfoUserDiaChi">Địa chỉ giao hàng</string>
+    <string name="btnInfoUserDonHang">Quản lý đơn hàng</string>
+    <string name="btnInfoUserDangXuat">Đăng xuất</string>
+    <string name="btnLuuThongTin">Lưu thông tin</string>
+    <string name="btnThanhToan">Thanh toán</string>
+    <!--Mẫu giao diện info-->
+    <string name="edtSonVy">Sơn Vy</string>
+    <string name="edtSDTMau">0901XXXXXX</string>
+
+</resources>
