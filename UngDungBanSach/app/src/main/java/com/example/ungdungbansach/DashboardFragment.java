@@ -78,15 +78,11 @@ public class DashboardFragment extends Fragment {
         lvTheLoai.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Fragment fragmentCategories = new CategoriesFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("name",theLoaiArrayList.get(position).getTenTheLoai());
-                bundle.putString("id",theLoaiArrayList.get(position).getMaLoai());
-                Log.d("Vy",""+theLoaiArrayList.get(position).getMaLoai());
-                fragmentCategories.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frameLayoutMain,fragmentCategories);
+                fragmentTransaction.replace(R.id.frameLayoutMain,CategoriesFragment.newInstance(theLoaiArrayList.get(position).getMaLoai(), theLoaiArrayList.get(position).getTenTheLoai()));
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+                Log.d("Vy","ItemClickListview the loai " + theLoaiArrayList.get(position).getMaLoai());
             }
         });
     }

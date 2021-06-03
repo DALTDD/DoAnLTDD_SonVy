@@ -44,5 +44,8 @@ public interface DataService {
 
     @FormUrlEncoded
     @POST("getSachByTheLoai.php")
-    Call<List<Sach>> getSachByTheLoai(@Field("MaLoai") String maLoai);
+    Call<List<Sach>> getSachByTheLoai(@Field("maLoai") String maLoai);
+    @FormUrlEncoded
+    @POST("searchSach.php")
+    Call<List<Sach>> getSachBySearch(@Field("search") String search);
 }

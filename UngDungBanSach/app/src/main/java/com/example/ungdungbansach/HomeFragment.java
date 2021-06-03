@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,11 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.ungdungbansach.R;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
@@ -48,6 +47,7 @@ public class HomeFragment extends Fragment {
     SachAdapterRecyclerView sachAdapterRecyclerView;
     ArrayList<Sach> arrLstSach;
     RelativeLayout relativeLayout;
+    EditText searchView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -77,6 +78,9 @@ public class HomeFragment extends Fragment {
         nestedScrollView = view.findViewById(R.id.nestedScrollView);
         relativeLayout = view.findViewById(R.id.relative);
         recyclerViewSachHome = view.findViewById(R.id.recyclerViewSachHome);
+        //search
+        searchView = view.findViewById(R.id.searchView);
+        //
         //
         arrLstQuangCao = new ArrayList<>();
         getAllQuangCao(new CustomCallbackQC() {
@@ -113,7 +117,14 @@ public class HomeFragment extends Fragment {
             }
         });
         //
-
+        //sự kiện click edt search
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(),SearchActivity.class);
+                startActivity(intent);
+            }
+        });
         //
         sachAdapterRecyclerView = new SachAdapterRecyclerView(getContext(), arrLstSach, new OnCallBack() {
             @Override

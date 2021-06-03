@@ -12,12 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UngDungBanSach"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DetailActivity"></activity>
-        <activity android:name=".WelcomeActivity"></activity>
+        <activity android:name=".SearchActivity" android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+
+        </activity>
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".WelcomeActivity" />
         <activity android:name=".InfoAddressActivity" />
         <activity android:name=".InfoUserActivity" />
         <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity"></activity>
         <activity
             android:name=".MainActivity"

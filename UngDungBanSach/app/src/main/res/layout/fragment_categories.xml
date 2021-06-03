@@ -11,9 +11,12 @@
     <TextView
         android:id="@+id/txtTenTheLoaiCategories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginLeft="4dp"
+        android:gravity="center_vertical"
         android:text="TextView"
-        android:textColor="#00bcd4" />
+        android:textColor="#00bcd4"
+        android:textSize="18sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcCategories"

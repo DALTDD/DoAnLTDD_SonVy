@@ -21,7 +21,6 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/search_vew"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -29,7 +28,6 @@
                 android:cursorVisible="false"
                 android:drawableLeft="@drawable/ic_baseline_search_24"
                 android:hint="Sản phẩm cần tìm..."
-
                 android:padding="8dp" />
         </LinearLayout>
     </RelativeLayout>
@@ -63,6 +61,7 @@
                     app:strokeWidth="1dp" />
 
                 <EditText
+                    android:id="@+id/searchView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
