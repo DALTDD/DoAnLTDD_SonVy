@@ -17,10 +17,10 @@
         android:id="@+id/txtTenDanhMuc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
-        android:drawablePadding="2dp"
 
+        android:drawablePadding="2dp"
         android:text="TextView"
         android:textColor="#5E5D5D"
         android:textSize="18dp"

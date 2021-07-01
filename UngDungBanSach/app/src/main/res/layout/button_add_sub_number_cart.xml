@@ -14,7 +14,7 @@
 
         <ImageView
             android:background="#EDEDED"
-            android:id="@+id/imgMinus"
+            android:id="@+id/imgGiamSLGioHang"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:padding="5dp"
@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
-            android:id="@+id/txtNumbers"
+            android:id="@+id/txtSLGioHang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
@@ -31,19 +31,19 @@
             android:layout_marginStart="24dp"
             android:inputType="number"
             android:textColor="@android:color/black"
-            app:layout_constraintTop_toTopOf="@+id/imgMinus"
-            app:layout_constraintBottom_toBottomOf="@id/imgMinus"
-            app:layout_constraintStart_toEndOf="@+id/imgMinus"/>
+            app:layout_constraintTop_toTopOf="@+id/imgGiamSLGioHang"
+            app:layout_constraintBottom_toBottomOf="@id/imgGiamSLGioHang"
+            app:layout_constraintStart_toEndOf="@+id/imgGiamSLGioHang"/>
 
         <ImageView
-            android:id="@+id/imgPlus"
+            android:id="@+id/imgTangSLGioHang"
             android:background="#EDEDED"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="24dp"
             android:src="@drawable/ic_baseline_add_24"
             android:padding="5dp"
-            app:layout_constraintStart_toEndOf="@+id/txtNumbers"
+            app:layout_constraintStart_toEndOf="@+id/txtSLGioHang"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

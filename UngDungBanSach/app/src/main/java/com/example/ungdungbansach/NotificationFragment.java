@@ -1,5 +1,7 @@
 package com.example.ungdungbansach;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -26,16 +28,23 @@ public class NotificationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("KRT", "So luong noti " + cart.getInstanceCart().size());
+        Log.d("KRT", "NotificationFragment - Check so luong mat hang trong gio: " + cart.getInstanceCart().size());
         for (CartItem item : cart.getInstanceCart()){
-            Log.d("KRT", "Duyet carrt " + item.toString());
+            Log.d("KRT", "NotificationFragment - Duyet mat hang trong gio: " + item.toString());
         }
+        //
+        clearPreferences();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notification, container, false);
+    }
+    public void clearPreferences() {
+        SharedPreferences p = getActivity().getSharedPreferences("caches", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edCaches = p.edit();
+        edCaches.clear();
+        edCaches.commit();
     }
 }

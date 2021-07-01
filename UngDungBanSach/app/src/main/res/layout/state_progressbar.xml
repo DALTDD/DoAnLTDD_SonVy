@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.kofigyan.stateprogressbar.StateProgressBar
+        app:spb_stateDescriptionSize="17dp"
+        android:id="@+id/stateProgressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:spb_animateToCurrentProgressState="true"
+        app:spb_checkStateCompleted="true"
+        app:spb_currentStateDescriptionColor="#00BA47"
+        app:spb_currentStateNumber="one"
+        app:spb_maxStateNumber="three"
+        app:spb_stateBackgroundColor="#BDBDBD"
+        app:spb_stateDescriptionColor="#808080"
+        app:spb_stateForegroundColor="#00BA47"
+        app:spb_stateNumberBackgroundColor="#808080"
+        app:spb_stateNumberForegroundColor="#eeeeee" />
+</RelativeLayout>

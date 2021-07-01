@@ -79,10 +79,10 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frameLayoutMain,CategoriesFragment.newInstance(theLoaiArrayList.get(position).getMaLoai(), theLoaiArrayList.get(position).getTenTheLoai()));
-                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.frameLayoutMain,CategoriesFragment.newInstance(theLoaiArrayList.get(position).getMaLoai(), theLoaiArrayList.get(position).getTenTheLoai()),"Categories");
+                //fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-                Log.d("Vy","ItemClickListview the loai " + theLoaiArrayList.get(position).getMaLoai());
+                Log.d("KRT","DashboardFragment - ItemClickListview the loai " + theLoaiArrayList.get(position).getMaLoai());
             }
         });
     }
@@ -115,7 +115,7 @@ public class DashboardFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<List<DanhMuc>> call, Throwable t) {
-
+                Log.d("KRT","DashboardFragment - GetData Danh mục onFailure: " + t.getMessage());
             }
         });
     }
@@ -132,19 +132,16 @@ public class DashboardFragment extends Fragment {
                     TheLoai tlAllSach = new TheLoai(String.valueOf(-1),String.valueOf(-1),"Tất cả sách");
                     theLoaiArrayList.add(0,tlAllSach);
                     theLoaiArrayList.addAll(arrayList);
-                    //
-                    Log.d("KRT",theLoaiArrayList.size() + "");
-                    //
                     theLoaiAdapter.notifyDataSetChanged();
                 }
                 else {
-                    Log.d("KRT","Adapter The Loai thât bại" );
+                    Log.d("KRT","DashboardFragment - GetTheLoaiByDanhMuc Not Success");
                 }
             }
 
             @Override
             public void onFailure(Call<List<TheLoai>> call, Throwable t) {
-                Log.d("KRT","Adapter The Loai " + t.getMessage());
+                Log.d("KRT","DashboardFragment - GetTheLoaiByDanhMuc onFailure: " + t.getMessage());
             }
         });
     }

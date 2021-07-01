@@ -29,6 +29,7 @@ import Model.APIService;
 import Model.DataService;
 import Model.OnCallBack;
 import Model.Sach;
+import Model.SachLite;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +40,7 @@ public class CategoriesFragment extends Fragment {
     TextView txtTenTheLoaiCate;
     RecyclerView rcCategories;
     SachAdapterRecyclerView sachAdapterRecyclerView;
-    ArrayList<Sach> sachArrayList;
+    ArrayList<SachLite> sachArrayList;
     String maLoai;
     Bundle bundle;
     AppCompatActivity appCompatActivity;
@@ -111,12 +112,12 @@ public class CategoriesFragment extends Fragment {
 
     private void getSachByTheLoai(String maLoai) {
         DataService dataService = APIService.getService();
-        Call<List<Sach>> callback = dataService.getSachByTheLoai(maLoai);
-        callback.enqueue(new Callback<List<Sach>>() {
+        Call<List<SachLite>> callback = dataService.getSachByTheLoai(maLoai);
+        callback.enqueue(new Callback<List<SachLite>>() {
             @Override
-            public void onResponse(Call<List<Sach>> call, Response<List<Sach>> response) {
+            public void onResponse(Call<List<SachLite>> call, Response<List<SachLite>> response) {
                 if (response.isSuccessful()) {
-                    ArrayList<Sach> arrayList = (ArrayList<Sach>) response.body();
+                    ArrayList<SachLite> arrayList = (ArrayList<SachLite>) response.body();
                     sachArrayList.clear();
                     sachArrayList.addAll(arrayList);
                     sachAdapterRecyclerView.notifyDataSetChanged();
@@ -127,26 +128,26 @@ public class CategoriesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Sach>> call, Throwable t) {
+            public void onFailure(Call<List<SachLite>> call, Throwable t) {
                 Log.d("Vy", "Goi sach by the loai that bai" + t.getMessage());
             }
         });
     }
     private void getAllSachByTheLoai(){
         DataService dataService = APIService.getService();
-        Call<List<Sach>> callback = dataService.getAllSach();
-        callback.enqueue(new Callback<List<Sach>>() {
+        Call<List<SachLite>> callback = dataService.getAllSach();
+        callback.enqueue(new Callback<List<SachLite>>() {
             @Override
-            public void onResponse(Call<List<Sach>> call, Response<List<Sach>> response) {
+            public void onResponse(Call<List<SachLite>> call, Response<List<SachLite>> response) {
                 if(response.isSuccessful()){
-                    ArrayList<Sach> arrayList = (ArrayList<Sach>) response.body();
+                    ArrayList<SachLite> arrayList = (ArrayList<SachLite>) response.body();
                     sachArrayList.clear();
                     sachArrayList.addAll(arrayList);
                     sachAdapterRecyclerView.notifyDataSetChanged();
                 }
             }
             @Override
-            public void onFailure(Call<List<Sach>> call, Throwable t) {
+            public void onFailure(Call<List<SachLite>> call, Throwable t) {
 
             }
         });
@@ -157,8 +158,8 @@ public class CategoriesFragment extends Fragment {
         switch (item.getItemId()) {
             case android.R.id.home:
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frameLayoutMain, new DashboardFragment());
-                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.frameLayoutMain, new DashboardFragment(),"Dashboard");
+                //fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 appCompatActivity.getSupportActionBar().setHomeButtonEnabled(false);

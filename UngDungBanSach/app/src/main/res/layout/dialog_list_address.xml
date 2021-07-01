@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtDatDCMacDinh"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_top"
+        android:padding="10dp"
+        android:text="Đặt làm địa chỉ mặc định"
+        android:textAlignment="center"
+        android:textColor="#1a0dab"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtChinhSua"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_top"
+        android:padding="10dp"
+        android:text="Chỉnh sửa"
+        android:textAlignment="center"
+        android:textColor="#1a0dab"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtDatDCMacDinh" />
+
+    <TextView
+        android:id="@+id/txtXoaDC"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_top"
+        android:padding="10dp"
+        android:text="Xoá"
+        android:textAlignment="center"
+        android:textColor="#1a0dab"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtChinhSua" />
+
+    <TextView
+        android:id="@+id/txtHuyDC"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_top"
+        android:padding="10dp"
+        android:text="Huỷ"
+        android:textAlignment="center"
+        android:textColor="#FF0000"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtXoaDC" />
+</androidx.constraintlayout.widget.ConstraintLayout>

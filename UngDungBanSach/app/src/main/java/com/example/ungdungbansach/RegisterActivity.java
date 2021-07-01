@@ -1,5 +1,6 @@
 package com.example.ungdungbansach;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -10,6 +11,7 @@ import android.text.Layout;
 import android.text.SpannableString;
 import android.text.style.AlignmentSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -41,12 +43,20 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        //Thay doi mau Actionbar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.color_gradient));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Đăng ký tài khoản");
+        }
+        //
         linkWidget();
         //
         txtDangNhapRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.putExtra("Mode",0);
                 startActivity(intent);
             }
         });
@@ -61,30 +71,37 @@ public class RegisterActivity extends AppCompatActivity {
                 String xacNhanMK = edtXacNhanMKRegister.getText().toString().trim();
                 if (hoTen.isEmpty()) {
                     edtHoVaTenRegister.setError("Họ và tên không được để trống");
+                    edtHoVaTenRegister.requestFocus();
                     return;
                 }
                 if (tenDangNhap.isEmpty()) {
                     edtTenDangNhapRegister.setError("Tên đăng nhập không được để trống");
+                    edtTenDangNhapRegister.requestFocus();
                     return;
                 }
                 if (email.isEmpty()) {
                     edtEmailRegister.setError("Email không được để trống");
+                    edtEmailRegister.requestFocus();
                     return;
                 }
                 if (!isValid(email)) {
                     edtEmailRegister.setError("Sai định dạng Email");
+                    edtEmailRegister.requestFocus();
                     return;
                 }
                 if (matKhau.isEmpty()) {
                     edtMatKhauRegister.setError("Mật khẩu không được để trống");
+                    edtMatKhauRegister.requestFocus();
                     return;
                 }
                 if (matKhau.length() < 6) {
                     edtMatKhauRegister.setError("Mật khẩu từ 6 ký tự trở lên");
+                    edtMatKhauRegister.requestFocus();
                     return;
                 }
                 if (xacNhanMK.isEmpty()) {
                     edtXacNhanMKRegister.setError("Xác nhận mật khẩu không được để trống");
+                    edtXacNhanMKRegister.requestFocus();
                     return;
                 }
                 if (matKhau.equals(xacNhanMK)) {
@@ -118,10 +135,13 @@ public class RegisterActivity extends AppCompatActivity {
                                 } else if (stringRequest.getStatus().equals("ok") && stringRequest.getResultCode().equals("0")) {
                                     //THanh cong
                                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                    intent.putExtra("TenDN",tenDangNhap);
+                                    intent.putExtra("MatKhau",matKhau);
+                                    intent.putExtra("Mode",0);
                                     startActivity(intent);
                                     finish();
                                 } else {
-                                    Log.d("KRT", stringRequest.getStatus() + " " + stringRequest.getResultCode());
+                                    Log.d("KRT", "RegisterActivity " + stringRequest.getStatus() + " " + stringRequest.getResultCode());
                                 }
 
                             }
@@ -129,12 +149,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<StringRequest> call, Throwable t) {
-                            Log.d("KRT", t.getMessage() + " " + t.getCause());
+                            Log.d("KRT", "RegisterActivity - Dang ky onFailure: " + t.getMessage());
                         }
                     });
                 } else {
-                    edtMatKhauRegister.setError("Mật khẩu và xác nhận mật khẩu không khớp.");
+                    edtXacNhanMKRegister.setError("Mật khẩu và xác nhận mật khẩu không khớp.");
                     edtXacNhanMKRegister.setText("");
+                    edtXacNhanMKRegister.requestFocus();
                     return;
                 }
             }
@@ -164,5 +185,28 @@ public class RegisterActivity extends AppCompatActivity {
         if(email == null)
             return false;
         return pattern.matcher(email).matches();
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

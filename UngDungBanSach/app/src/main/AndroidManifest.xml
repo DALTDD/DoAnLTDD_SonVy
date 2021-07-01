@@ -12,24 +12,42 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UngDungBanSach"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SearchActivity" android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        <activity android:name=".ListAddressActivity">
 
         </activity>
-        <activity android:name=".DetailActivity" />
-        <activity android:name=".WelcomeActivity" />
-        <activity android:name=".InfoAddressActivity" />
-        <activity android:name=".InfoUserActivity" />
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".EditAddressActivity"></activity>
+        <activity android:name=".ChooseDeliveryInfoActivity"></activity>
+        <activity android:name=".AddAddressActivity" />
+        <activity android:name=".SeeMoreActivity" />
+        <activity android:name=".LoadMoreActivity" />
+        <activity android:name=".CartActivity" />
+        <activity android:name=".OrderSuccessActivity" />
+        <activity android:name=".ConfirmActivity" />
+        <activity android:name=".PaymentActivity" />
+        <activity android:name=".DeliveryInfoActivity" />
         <activity
-            android:name=".MainActivity"
-            android:theme="@style/Theme.HaveActionBar">
+            android:name=".SearchActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity android:name=".DetailActivity" />
+        <activity
+            android:name=".WelcomeActivity"
+            android:theme="@style/Theme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".InfoAddressActivity" />
+        <activity android:name=".InfoUserActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
+
         </activity>
     </application>
 

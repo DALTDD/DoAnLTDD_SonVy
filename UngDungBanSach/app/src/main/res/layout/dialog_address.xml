@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_dialog"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView32"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_tittle"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Thông Báo"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView29"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="Xác nhận địa chỉ giao hàng là:"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/txtXacNhanDiaChi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textView29"
+        app:layout_constraintStart_toStartOf="@+id/textView29"
+        app:layout_constraintTop_toBottomOf="@+id/textView29" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="@+id/textView29"
+        app:layout_constraintStart_toStartOf="@+id/textView29"
+        app:layout_constraintTop_toBottomOf="@+id/txtXacNhanDiaChi">
+
+        <Button
+            android:id="@+id/btnChonLaiDC"
+            android:background="@drawable/custom_btn_radius_left_bottom"
+            app:backgroundTint="@null"
+            android:textColor="@color/startGradientBtnQMK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Chọn Lại" />
+
+        <Button
+            android:id="@+id/btnXacNhanDC"
+            android:background="@drawable/custom_btn_radius_right_bottom"
+            app:backgroundTint="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Xác Nhận" />
+    </LinearLayout>
+</LinearLayout>

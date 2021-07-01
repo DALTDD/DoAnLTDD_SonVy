@@ -20,13 +20,14 @@ import java.util.Locale;
 
 import Model.OnCallBack;
 import Model.Sach;
+import Model.SachLite;
 
 public class SachAdapterRecyclerViewHorizontal extends RecyclerView.Adapter<SachAdapterRecyclerViewHorizontal.SachViewHolder>{
     Context context;
-    ArrayList<Sach> arrLstSach;
+    ArrayList<SachLite> arrLstSach;
     OnCallBack itemRecyclerViewListener;
 
-    public SachAdapterRecyclerViewHorizontal(Context context, ArrayList<Sach> arrLstSach, OnCallBack itemRecyclerViewListener) {
+    public SachAdapterRecyclerViewHorizontal(Context context, ArrayList<SachLite> arrLstSach, OnCallBack itemRecyclerViewListener) {
         this.context = context;
         this.arrLstSach = arrLstSach;
         this.itemRecyclerViewListener = itemRecyclerViewListener;
@@ -41,7 +42,7 @@ public class SachAdapterRecyclerViewHorizontal extends RecyclerView.Adapter<Sach
 
     @Override
     public void onBindViewHolder(@NonNull SachAdapterRecyclerViewHorizontal.SachViewHolder holder, int position) {
-        Sach sach = arrLstSach.get(position);
+        SachLite sach = arrLstSach.get(position);
         holder.txtTenSachHome.setText(sach.getTenSach());
         //
         double price = Double.parseDouble(sach.getGiaGoc());
@@ -69,7 +70,10 @@ public class SachAdapterRecyclerViewHorizontal extends RecyclerView.Adapter<Sach
 
     @Override
     public int getItemCount() {
-        return arrLstSach.size();
+        if(arrLstSach != null) {
+            return arrLstSach.size();
+        }
+        return 0;
     }
 
     public class SachViewHolder extends RecyclerView.ViewHolder {

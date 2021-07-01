@@ -3,22 +3,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E5e5e5"
     tools:context=".CartFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Fragment Cart" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <ImageView
+            android:id="@+id/imgGioHangTrong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:src="@drawable/empty_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/txtGioHangTrong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Chưa có sản phẩm nào trong giỏ hàng của bạn"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/imgGioHangTrong"
+            app:layout_constraintStart_toStartOf="@+id/imgGioHangTrong"
+            app:layout_constraintTop_toBottomOf="@+id/imgGioHangTrong"
+            android:visibility="gone"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcGioHang"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtGioHangTrong" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:elevation="1dp"
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/white"
+        android:background="@drawable/border_top"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@null">
 
         <TextView
             android:id="@+id/textView11"
@@ -27,28 +67,28 @@
 
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="Thành tiền"
+            android:text="Thành tiền:"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/txtThanhTienGioHang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:text="Giá tiền"
             android:textColor="@color/orange"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/textView11"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView11"></TextView>
 
         <Button
-            android:id="@+id/btnThanhToan"
+            android:id="@+id/btnThanhToanGioHang"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"

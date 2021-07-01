@@ -10,7 +10,7 @@
         android:id="@+id/nestedScrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnThemGioHang"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -29,7 +29,6 @@
                     android:layout_width="220dp"
                     android:layout_height="220dp"
                     android:layout_marginTop="8dp"
-                    android:src="@drawable/sachmau"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +50,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:text="Bé Tập Tô Màu"
                     android:textColor="#000000"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +73,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="50.000 đ"
                     android:textColor="#E11212"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -88,7 +85,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="60.000đ"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/txtGiaKMCTSP"
                     app:layout_constraintStart_toEndOf="@+id/txtGiaKMCTSP"
@@ -99,7 +95,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="-5%"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/txtGiaGocCTSP"
                     app:layout_constraintStart_toEndOf="@+id/txtGiaGocCTSP"
@@ -137,7 +132,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="TextView"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/textView16"
@@ -160,7 +154,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="TextView"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/textView18"
@@ -183,7 +176,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="TextView"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/textView20"
@@ -235,7 +227,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="TextView"
                     android:textColor="#000000"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@+id/textView5"
@@ -262,32 +253,44 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewCTSP"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <include
-        android:id="@+id/includeBtnNumber"
-        layout="@layout/button_add_sub_number_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnThemGioHang"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnThemGioHang" />
-
-    <Button
-        android:id="@+id/btnThemGioHang"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/border_top"
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/color_btncart"
-        android:text="Thêm vào giỏ hàng"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/includeBtnNumber" />
+        app:layout_constraintStart_toStartOf="parent">
+        <include
+            android:id="@+id/includeBtnNumber"
+            layout="@layout/button_add_sub_number_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnThemGioHang"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnThemGioHang" />
+
+        <Button
+            android:id="@+id/btnThemGioHang"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/color_btncart"
+            android:text="Thêm vào giỏ hàng"
+            android:textAllCaps="false"
+            android:textSize="17sp"
+            android:letterSpacing="0"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/includeBtnNumber" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

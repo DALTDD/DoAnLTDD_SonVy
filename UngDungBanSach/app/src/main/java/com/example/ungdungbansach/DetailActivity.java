@@ -5,18 +5,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import Adapter.SachAdapterRecyclerView;
 import Adapter.SachAdapterRecyclerViewHorizontal;
 import Model.APIService;
 import Model.Cart;
@@ -33,6 +35,7 @@ import Model.CartItem;
 import Model.DataService;
 import Model.OnCallBack;
 import Model.Sach;
+import Model.SachLite;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +45,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     TextView txtTenSachCTSP, txtGiaKMCTSP, txtGiaGocCTSP, txtPTGiamGiaCTSP, txtTacGiaCTSP, txtNhaXuatBanCTSP, txtTheLoaiCTSP, txtMoTaCTSP, txtDanhMucCTSP;
     RecyclerView recyclerViewSachCTSP;
     SachAdapterRecyclerViewHorizontal sachAdapterRecyclerView;
-    ArrayList<Sach> arrLstSach;
+    ArrayList<SachLite> arrLstSach;
     Button btnThemGioHang;
     String maSach;
     View includeBtnNumber;
@@ -57,10 +60,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_detail);
         //
         linkWidget();
+        btnThemGioHang.setEnabled(false);
+        imgMinus.setEnabled(false);
         //Thay doi mau Actionbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.color_gradient));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Chi tiết");
         }
         //
         arrLstSach = new ArrayList<>();
@@ -77,15 +83,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         recyclerViewSachCTSP.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         recyclerViewSachCTSP.setHasFixedSize(true);
         //
-        Intent intent = getIntent();
-        if (intent != null) {
-            maSach = intent.getStringExtra("maSach");
-            //
-            Log.d("KRT", "Chuyen tu man hinh home sang chi tiet ma sach : " + maSach);
-            //
-            //loadDetailSach(maSach);
-            //AsyncTask
-            new loadData().execute(maSach);
+        if (getIntent().getStringExtra("maSach") != null) {
+            maSach = getIntent().getStringExtra("maSach");
+            loadDetailSach(maSach);
+        }
+        else{
+            finish();
         }
         //
         btnThemGioHang.setOnClickListener(this::onClick);
@@ -108,13 +111,20 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         recyclerViewSachCTSP = findViewById(R.id.recyclerViewCTSP);
         btnThemGioHang = findViewById(R.id.btnThemGioHang);
         includeBtnNumber = findViewById(R.id.includeBtnNumber);
-        imgMinus = includeBtnNumber.findViewById(R.id.imgMinus);
-        imgPlus = includeBtnNumber.findViewById(R.id.imgPlus);
-        txtNumbers = includeBtnNumber.findViewById(R.id.txtNumbers);
+        imgMinus = includeBtnNumber.findViewById(R.id.imgGiamSLGioHang);
+        imgPlus = includeBtnNumber.findViewById(R.id.imgTangSLGioHang);
+        txtNumbers = includeBtnNumber.findViewById(R.id.txtSLGioHang);
     }
 
     private void loadDetailSach(String maSach) {
+        //
+        ProgressDialog progressDialog = new ProgressDialog(DetailActivity.this);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setContentView(R.layout.progress_load_data);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         DataService dataService = APIService.getService();
+        //
         Call<Sach> callback = dataService.getSachByMaSach(maSach);
         callback.enqueue(new Callback<Sach>() {
             @Override
@@ -151,37 +161,43 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                         }
                         //
                         cartItem = new CartItem(sach.getMaSach(),sach.getTenSach(),sach.getAnh(),Double.parseDouble(sach.getGiaGoc()),Double.parseDouble(sach.getGiaKhuyenMai()));
+                        btnThemGioHang.setEnabled(true);
                     }
                 } else {
-                    Log.d("KRT", "Call API chi tiet san pham : Null");
+                    Log.d("KRT", "DetailActivity - Call API chi tiet san pham : Null");
                 }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<Sach> call, Throwable t) {
-
+                progressDialog.dismiss();
+                Log.d("KRT", "DetailActivity - Call API chi tiet san pham onFailure: " + t.getMessage());
             }
         });
     }
 
     public void loadSachByTheLoaiRandom(String maLoai, String maSach) {
         DataService dataService = APIService.getService();
-        Call<List<Sach>> callback = dataService.getSachByTheLoaiRandom(maLoai, maSach);
-        callback.enqueue(new Callback<List<Sach>>() {
+        Call<List<SachLite>> callback = dataService.getSachByTheLoaiRandom(maLoai, maSach);
+        callback.enqueue(new Callback<List<SachLite>>() {
             @Override
-            public void onResponse(Call<List<Sach>> call, Response<List<Sach>> response) {
+            public void onResponse(Call<List<SachLite>> call, Response<List<SachLite>> response) {
                 if (response.isSuccessful()) {
-                    ArrayList<Sach> arrayList = (ArrayList<Sach>) response.body();
-                    Log.d("KRT", "Lay sach cung the loai random CTSP size = " + arrayList.size());
+                    ArrayList<SachLite> arrayList = (ArrayList<SachLite>) response.body();
+                    Log.d("KRT", "DetailActivity - Lay sach cung the loai random CTSP size = " + arrayList.size());
                     arrLstSach.clear();
                     arrLstSach.addAll(arrayList);
                     sachAdapterRecyclerView.notifyDataSetChanged();
                 }
+                else{
+                    Log.d("KRT", "DetailActivity - Lay sach cung the loai random CTSP Not Success");
+                }
             }
 
             @Override
-            public void onFailure(Call<List<Sach>> call, Throwable t) {
-
+            public void onFailure(Call<List<SachLite>> call, Throwable t) {
+                Log.d("KRT", "DetailActivity - Lay sach cung the loai random CTSP onFailure: " + t.getMessage());
             }
         });
     }
@@ -191,7 +207,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         if (v.equals(btnThemGioHang)) {
             int soLuong = Integer.parseInt(txtNumbers.getText().toString());
             if(cart.getInstanceCart().size() > 0){
-                Log.d("KRT","Gio > 0");
                 boolean check = true;
                 for(int i = 0; i < cart.getInstanceCart().size(); i++){
                     if(cart.getInstanceCart().get(i).getMaSach().equals(maSach)){
@@ -210,6 +225,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 cartItem.setSoLuong(soLuong);
                 cart.getInstanceCart().add(cartItem);
             }
+            Log.d("KRT","DetailActivity - So luong mat hang trong gio hang sau khi them: " + cart.getInstanceCart().size());
+            showDialogGH(soLuong);
         }
         if (v.equals(imgMinus)) {
             if(number > 1){
@@ -241,7 +258,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+        finish();
     }
 
     @Override
@@ -261,4 +278,51 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void showDialogGH(int soLuong){
+        Dialog dialog = new Dialog(DetailActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottom_dialog);
+        //
+        TextView txtGiaSachDialog, txtTenSachDialog, txtSoLuongDialog;
+        txtGiaSachDialog = dialog.findViewById(R.id.txtGiaSachDialog);
+        txtTenSachDialog = dialog.findViewById(R.id.txtTenSachDialog);
+        txtSoLuongDialog = dialog.findViewById(R.id.txtSoLuongDialog);
+        Button btnXemGHDialog, btnMuaTiepDialog;
+        btnXemGHDialog = dialog.findViewById(R.id.btnXemGHDialog);
+        btnMuaTiepDialog = dialog.findViewById(R.id.btnMuaTiepDialog);
+        ImageView imgSachDialog = dialog.findViewById(R.id.imgSachDialog);
+        //
+        txtTenSachDialog.setText(cartItem.getTenSach());
+        Locale locale = new Locale("vi", "VN");
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+        txtGiaSachDialog.setText(numberFormat.format(cartItem.getGiaKhuyenMai()));
+        txtSoLuongDialog.setText("x" + String.valueOf(soLuong));
+        Picasso.with(DetailActivity.this)
+                .load(cartItem.getAnh())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(imgSachDialog);
+        //
+        btnMuaTiepDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnXemGHDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent(DetailActivity.this,CartActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+            }
+        });
+
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+    }
+
 }

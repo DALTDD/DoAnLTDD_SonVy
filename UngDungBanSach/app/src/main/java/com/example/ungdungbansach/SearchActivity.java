@@ -94,7 +94,7 @@ public class SearchActivity extends AppCompatActivity {
                         sachArrayList.clear();
                         sachArrayList.addAll(arrayList);
                         sachSearchAdapter.notifyDataSetChanged();
-                        Log.d("Vy","Get sach by search thanh cong"+arrayList.size());
+                        Log.d("Vy","Get sach by search thanh cong size : "+arrayList.size());
                         lstSearch.setVisibility(View.VISIBLE);
                         txtKetQuaSearch.setVisibility(View.GONE);
                         cardViewSearch.setVisibility(View.GONE);

@@ -8,15 +8,30 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="216dp"
+        android:layout_height="262dp"
         android:contentDescription="TODO"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.326"
+        app:layout_constraintVertical_bias="0.398"
         app:srcCompat="@drawable/logosach" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressTint="@color/endGradient"
+        android:secondaryProgressTint="@color/startGradientBtnQMK"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:indeterminate="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

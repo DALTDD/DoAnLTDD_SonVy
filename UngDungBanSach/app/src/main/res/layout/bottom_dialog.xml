@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+<TextView
+    android:drawableLeft="@drawable/ic_baseline_check_circle_24"
+    android:layout_marginTop="15dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:text="Sản phẩm đã được thêm vào giỏ hàng"
+    android:textColor="@color/black"
+    android:textSize="18sp"
+    android:drawablePadding="10dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imgSachDialog"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtTenSachDialog"
+            android:layout_width="0dp"
+            android:maxLines="2"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="32dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgSachDialog"
+            app:layout_constraintTop_toTopOf="@+id/imgSachDialog" />
+
+        <TextView
+            android:id="@+id/txtGiaSachDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/txtTenSachDialog"
+            app:layout_constraintTop_toBottomOf="@+id/txtTenSachDialog" />
+
+        <TextView
+            android:id="@+id/txtSoLuongDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/txtGiaSachDialog"
+            app:layout_constraintStart_toEndOf="@+id/txtGiaSachDialog"
+            app:layout_constraintTop_toTopOf="@+id/txtGiaSachDialog" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btnXemGHDialog"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/custom_btn_gradient"
+        android:letterSpacing="0"
+        android:text="Xem giỏ hàng"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        app:backgroundTint="@null" />
+
+    <Button
+        android:id="@+id/btnMuaTiepDialog"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/custom_btn_nobackground"
+        android:letterSpacing="0"
+        android:text="Tiếp tục mua hàng"
+        android:textAllCaps="false"
+        android:textColor="@color/startGradient"
+        android:textSize="16sp"
+        app:backgroundTint="@null"
+        android:layout_marginBottom="10dp"/>
+
+
+</LinearLayout>
