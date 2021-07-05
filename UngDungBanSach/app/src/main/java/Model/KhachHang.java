@@ -25,9 +25,7 @@ public class KhachHang {
     @SerializedName("Email")
     @Expose
     private String email;
-    @SerializedName("DiaChi")
-    @Expose
-    private String diaChi;
+
     @SerializedName("TaiKhoan")
     @Expose
     private String taiKhoan;
@@ -78,14 +76,6 @@ public class KhachHang {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getDiaChi() {
-        return diaChi;
-    }
-
-    public void setDiaChi(String diaChi) {
-        this.diaChi = diaChi;
     }
 
     public String getTaiKhoan() {
