@@ -141,4 +141,16 @@ public interface DataService {
     @FormUrlEncoded
     @POST("datDiaChiMacDinh.php")
     Call<StringRequest> datDiaChiMacDinh(@Field("MaDiaChi") String MaDiaChi, @Field("MaKH") String MaKH);
+    //GetTTKHByMaKH
+    @FormUrlEncoded
+    @POST("getTTKHByMaKH.php")
+    Call<KhachHang> getTTKHByMaKH(@Field("MaKH") String MaKH);
+    //Update KH
+    @FormUrlEncoded
+    @POST("updateAccountInfo.php")
+    Call<StringRequest> updateAccountInfo(@Field("MaKH") String MaKH, @Field("HoTen") String HoTen,@Field("SDT") String SDT, @Field("NgaySinh") String NgaySinh, @Field("GioiTinh") String GioiTinh);
+    //Update MK
+    @FormUrlEncoded
+    @POST("updateMatKhauKH.php")
+    Call<StringRequest> updateMatKhauKH(@Field("MaKH") String MaKH, @Field("MatKhau") String MatKhau);
 }

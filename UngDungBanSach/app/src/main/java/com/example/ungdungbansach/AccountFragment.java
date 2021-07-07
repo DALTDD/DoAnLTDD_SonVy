@@ -44,7 +44,7 @@ import retrofit2.Response;
 
 
 public class AccountFragment extends Fragment {
-    Button btnThongTinCNAccount, btnDiaChiGHAccount, btnQuanLyDHAccount, btnDangXuat;
+    Button btnThongTinCNAccount, btnDiaChiGHAccount, btnQuanLyDHAccount, btnDangXuat,btnDoiMatKhauAccount;
     TextView txtTenDNAccount;
     String maKH = "";
     public AccountFragment() {
@@ -74,17 +74,34 @@ public class AccountFragment extends Fragment {
         btnQuanLyDHAccount = view.findViewById(R.id.btnQuanLyDHAccount);
         btnDangXuat = view.findViewById(R.id.btnDangXuat);
         txtTenDNAccount = view.findViewById(R.id.txtTenDNAccount);
+        btnDoiMatKhauAccount = view.findViewById(R.id.btnDoiMatKhauAccount);
         //
         btnQuanLyDHAccount.setEnabled(false);
         btnDiaChiGHAccount.setEnabled(false);
         btnThongTinCNAccount.setEnabled(false);
+        btnDoiMatKhauAccount.setEnabled(false);
         //
         loadInfo();
         //
+        //Thống tin cá nhân
         btnThongTinCNAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(),InfoUserActivity.class);
+                startActivity(intent);
+                Log.d("KRT", "AccountFragment-BtnThongTinCNAccount - MaKH: " + loadPreferences("MaKH"));
+                getActivity().overridePendingTransition(R.anim.enter_left_to_right,R.anim.exit_right_to_left);
+            }
+        });
+        //
+        //Đổi mk
+        btnDoiMatKhauAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(),ChangePasswordActivity.class);
+                startActivity(intent);
+                Log.d("KRT", "AccountFragment-btnDoiMatKhauAccount - MaKH: " + loadPreferences("MaKH"));
+                getActivity().overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
             }
         });
         //
@@ -95,6 +112,7 @@ public class AccountFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), ListAddressActivity.class);
                 intent.putExtra("MaKH", maKH);
                 startActivity(intent);
+                Log.d("KRT", "DiaChiGH - MaKH: " + maKH);
                 getActivity().overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
             }
         });
@@ -222,6 +240,7 @@ public class AccountFragment extends Fragment {
                             btnQuanLyDHAccount.setEnabled(true);
                             btnDiaChiGHAccount.setEnabled(true);
                             btnThongTinCNAccount.setEnabled(true);
+                            btnDoiMatKhauAccount.setEnabled(true);
                         } else if (login.getStatus().equals("0")) {//Da dang nhap sai tk, mk
                             clearPreferences();
                             Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -249,11 +268,11 @@ public class AccountFragment extends Fragment {
             startActivity(intent);
             getActivity().finish();
         }
-
     }
 
     public Boolean checkLogin() {
         SharedPreferences p = getActivity().getSharedPreferences("caches", Context.MODE_PRIVATE);
         return p.getBoolean("Login", false);
     }
+
 }

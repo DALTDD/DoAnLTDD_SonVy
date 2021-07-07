@@ -47,5 +47,8 @@
     <!--Mẫu giao diện info-->
     <string name="edtSonVy">Sơn Vy</string>
     <string name="edtSDTMau">0901XXXXXX</string>
+    <!--MyProfile-->
+    <string name="btnMyProfile">Hồ sơ của tôi</string>
+    <string name="btnChangePassword">Đổi mật khẩu</string>
 
 </resources>

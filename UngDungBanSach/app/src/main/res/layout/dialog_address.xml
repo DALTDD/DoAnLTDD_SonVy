@@ -63,11 +63,11 @@
             android:id="@+id/btnChonLaiDC"
             android:background="@drawable/custom_btn_radius_left_bottom"
             app:backgroundTint="@null"
-            android:textColor="@color/startGradientBtnQMK"
+            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Chọn Lại" />
+            android:text="Chọn lại" />
 
         <Button
             android:id="@+id/btnXacNhanDC"

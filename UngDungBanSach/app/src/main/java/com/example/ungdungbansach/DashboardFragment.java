@@ -61,18 +61,17 @@ public class DashboardFragment extends Fragment {
         theLoaiArrayList = new ArrayList<>();
         theLoaiAdapter = new TheLoaiAdapter(getContext(),theLoaiArrayList);
         lvTheLoai.setAdapter(theLoaiAdapter);
-
-
+//
         lvDanhMuc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Toast.makeText(view.getContext(), ""+danhMucArrayList.get(position).getMaDanhMuc(), Toast.LENGTH_SHORT).show();
                 getTLByIdDanhMuc(danhMucArrayList.get(position).getMaDanhMuc());
                 //
-
-                //
                 danhMucAdapter.setSelectedId(position);
                 danhMucAdapter.notifyDataSetChanged();//
+                //lvDanhMuc.setSelected(true);
             }
         });
         lvTheLoai.setOnItemClickListener(new AdapterView.OnItemClickListener() {

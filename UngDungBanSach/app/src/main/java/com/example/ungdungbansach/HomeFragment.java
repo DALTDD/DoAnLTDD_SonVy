@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
     SachAdapterRecyclerView sachAdapterRecyclerView;
     ArrayList<SachLite> arrLstSachAll, arrLstSachMoi, arrLstSachKM, arrLstSachBanChay;
     RelativeLayout relativeLayout;
-    EditText searchView;
+    EditText searchView,edtSearchView2;
     TextView txtXemThemKM, txtXemThemSM,txtXemThemBC, txtXemThemTC;
     SachAdapterRecyclerViewHorizontal sachMoiAdapter, sachKMAdapter, sachBanChayAdapter;
 
@@ -97,6 +97,7 @@ public class HomeFragment extends Fragment {
         rcSachBanChay = view.findViewById(R.id.rcSachBanChay);
         //search
         searchView = view.findViewById(R.id.searchView);
+        edtSearchView2 = view.findViewById(R.id.edtSearchView2);
         //
         arrLstQuangCao = new ArrayList<>();
         //
@@ -208,6 +209,14 @@ public class HomeFragment extends Fragment {
         //
         //sự kiện click edt search
         searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(),SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+        //
+        edtSearchView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(),SearchActivity.class);
