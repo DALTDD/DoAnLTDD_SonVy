@@ -35,14 +35,14 @@ public class WelcomeActivity extends AppCompatActivity {
                 public void onResponse(Call<Login> call, Response<Login> response) {
                     if (response.isSuccessful()) {
                         Login login = response.body();
-                        Log.d("KRT", "WelcomeActivity - Login Preferences Status: " + login.getStatus() + " ,MaKH: " + login.getKhachHang().getMaKH());
+                        Log.d("SV", "WelcomeActivity - Login Preferences Status: " + login.getStatus() + " ,MaKH: " + login.getKhachHang().getMaKH());
                         if (login.getStatus().equals("1")) {
                             saveLogin();
                             savePreferences("MaKH", login.getKhachHang().getMaKH());
                         } else if (login.getStatus().equals("0")) {
                             clearPreferences();
                         } else {
-                            Log.d("KRT", "WelcomeActivity - Login Preferences Status: " + login.getStatus() + " Loi file connect");
+                            Log.d("SV", "WelcomeActivity - Login Preferences Status: " + login.getStatus() + " Loi file connect");
                         }
                     }
                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
@@ -52,7 +52,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Login> call, Throwable t) {
-                    Log.d("KRT", "WelcomeActivity - Login Preferences onFailure: " + t.getMessage());
+                    Log.d("SV", "WelcomeActivity - Login Preferences onFailure: " + t.getMessage());
                 }
             });
         } else {
@@ -68,16 +68,6 @@ public class WelcomeActivity extends AppCompatActivity {
             }, 2000);
         }
 
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Intent intent = new Intent(WelcomeActivity.this,LoginActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        }, 2000);
     }
 
     public String loadPreferences(String key) {

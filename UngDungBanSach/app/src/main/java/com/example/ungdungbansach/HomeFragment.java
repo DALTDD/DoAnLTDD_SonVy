@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment {
         sachKMAdapter = new SachAdapterRecyclerViewHorizontal(getContext(), arrLstSachKM, new OnCallBack() {
             @Override
             public void onItemRecyclerViewClick(int position) {
-                Log.d("KRT","HomeFragment - Sách khuyến mãi,  " + position + " - " + arrLstSachKM.get(position).getTenSach() + " Ma sach : " + arrLstSachKM.get(position).getMaSach());
+                Log.d("SV","HomeFragment - Sách khuyến mãi,  " + position + " - " + arrLstSachKM.get(position).getTenSach() + " Ma sach : " + arrLstSachKM.get(position).getMaSach());
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("maSach", arrLstSachKM.get(position).getMaSach());
                 startActivity(intent);
@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
         sachMoiAdapter = new SachAdapterRecyclerViewHorizontal(getContext(), arrLstSachMoi, new OnCallBack() {
             @Override
             public void onItemRecyclerViewClick(int position) {
-                Log.d("KRT","HomeFragment - Sách mới,  " + position + " - " + arrLstSachMoi.get(position).getTenSach() + " Ma sach : " + arrLstSachMoi.get(position).getMaSach());
+                Log.d("SV","HomeFragment - Sách mới,  " + position + " - " + arrLstSachMoi.get(position).getTenSach() + " Ma sach : " + arrLstSachMoi.get(position).getMaSach());
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("maSach", arrLstSachMoi.get(position).getMaSach());
                 startActivity(intent);
@@ -126,7 +126,7 @@ public class HomeFragment extends Fragment {
         sachBanChayAdapter = new SachAdapterRecyclerViewHorizontal(getContext(), arrLstSachBanChay, new OnCallBack() {
             @Override
             public void onItemRecyclerViewClick(int position) {
-                Log.d("KRT","HomeFragment - Sách bán chạy,  " + position + " - " + arrLstSachBanChay.get(position).getTenSach() + " Ma sach : " + arrLstSachBanChay.get(position).getMaSach());
+                Log.d("SV","HomeFragment - Sách bán chạy,  " + position + " - " + arrLstSachBanChay.get(position).getTenSach() + " Ma sach : " + arrLstSachBanChay.get(position).getMaSach());
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("maSach", arrLstSachBanChay.get(position).getMaSach());
                 startActivity(intent);
@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment {
         sachAdapterRecyclerView = new SachAdapterRecyclerView(getContext(), arrLstSachAll, new OnCallBack() {
             @Override
             public void onItemRecyclerViewClick(int position) {
-                Log.d("KRT","HomeFragment - Tất cả sách,  " + position + " - " + arrLstSachAll.get(position).getTenSach() + " Ma sach : " + arrLstSachAll.get(position).getMaSach());
+                Log.d("SV","HomeFragment - Tất cả sách,  " + position + " - " + arrLstSachAll.get(position).getTenSach() + " Ma sach : " + arrLstSachAll.get(position).getMaSach());
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("maSach", arrLstSachAll.get(position).getMaSach());
                 startActivity(intent);
@@ -290,7 +290,6 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<QuangCao>> call, Response<List<QuangCao>> response) {
                 if (response.isSuccessful()) {
                     ArrayList<QuangCao> arrayList = (ArrayList<QuangCao>) response.body();
-                    Log.d("KRT", arrayList.size() + "");
                     customCallbackQC.onSucess(arrayList);
                 }
             }
@@ -298,7 +297,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<List<QuangCao>> call, Throwable t) {
                 customCallbackQC.onFailure(t.getMessage());
-                Log.d("KRT", "HomeFragment Load ảnh quảng cáo  onFailure: " + t.getMessage());
+                Log.d("SV", "HomeFragment Load ảnh quảng cáo  onFailure: " + t.getMessage());
             }
         });
     }
@@ -311,7 +310,6 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<SachLite>> call, Response<List<SachLite>> response) {
                 if(response.isSuccessful()){
                     ArrayList<SachLite> arrayList = (ArrayList<SachLite>) response.body();
-                    Log.d("KRT", "Tat ca sach : "+ arrayList.size());
                     arrLstSachAll.clear();
                     arrLstSachAll.addAll(arrayList);
                     sachAdapterRecyclerView.notifyDataSetChanged();

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
@@ -105,6 +106,13 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 if (matKhau.equals(xacNhanMK)) {
+                    //
+                    ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
+                    progressDialog.show();
+                    progressDialog.setCancelable(false);
+                    progressDialog.setContentView(R.layout.progress_load_data);
+                    progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    //
                     DataService dataService = APIService.getService();
                     Call<StringRequest> callback = dataService.register(hoTen, email, tenDangNhap, matKhau);
                     callback.enqueue(new Callback<StringRequest>() {
@@ -113,6 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 StringRequest stringRequest = response.body();
                                 if (stringRequest.getResultCode().equals("-1")) {
+                                    progressDialog.dismiss();
                                     //Trùng tên đăng nhập
                                     //edtTenDangNhapRegister.setError("Tên đăng nhập đã tồn tại. Vui lòng nhập tên đăng nhập khác!");
                                     AlertDialog.Builder alert = new AlertDialog.Builder(RegisterActivity.this);
@@ -125,6 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 } else if (stringRequest.getResultCode().equals("-2")) {
 //                                    edtEmailRegister.setError("Email đã tồn tại. Vui lòng nhập địa chỉ Email khác!");
 //                                    return;
+                                    progressDialog.dismiss();
                                     AlertDialog.Builder alert = new AlertDialog.Builder(RegisterActivity.this);
                                     SpannableString title = new SpannableString("Thông báo");
                                     title.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length(), 0);
@@ -134,6 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     alert.show().getWindow().setLayout(700, 500);
                                 } else if (stringRequest.getStatus().equals("ok") && stringRequest.getResultCode().equals("0")) {
                                     //THanh cong
+                                    progressDialog.dismiss();
                                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                     intent.putExtra("TenDN",tenDangNhap);
                                     intent.putExtra("MatKhau",matKhau);
@@ -141,15 +152,18 @@ public class RegisterActivity extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                 } else {
-                                    Log.d("KRT", "RegisterActivity " + stringRequest.getStatus() + " " + stringRequest.getResultCode());
+                                    Log.d("SV", "RegisterActivity " + stringRequest.getStatus() + " " + stringRequest.getResultCode());
                                 }
 
+                            }
+                            if(progressDialog.isShowing()){
+                                progressDialog.dismiss();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<StringRequest> call, Throwable t) {
-                            Log.d("KRT", "RegisterActivity - Dang ky onFailure: " + t.getMessage());
+                            Log.d("SV", "RegisterActivity - Dang ky onFailure: " + t.getMessage());
                         }
                     });
                 } else {

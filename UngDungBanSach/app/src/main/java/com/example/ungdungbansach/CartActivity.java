@@ -51,6 +51,7 @@ public class CartActivity extends AppCompatActivity {
             getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.color_gradient));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
         //
         linkWidget();
         //
@@ -93,54 +94,58 @@ public class CartActivity extends AppCompatActivity {
         btnThanhToanGioHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Kiem tra dang nhap
-                if (loadPreferences("TaiKhoan") != null && loadPreferences("MatKhau") != null) {
-                    String taiKhoan = loadPreferences("TaiKhoan");
-                    String matKhau = loadPreferences("MatKhau");
-                    //Kiem tra
-                    //
-                    ProgressDialog progressDialog = new ProgressDialog(CartActivity.this);
-                    progressDialog.show();
-                    progressDialog.setCancelable(false);
-                    progressDialog.setContentView(R.layout.progress_load_data);
-                    progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                ProgressDialog progressDialog = new ProgressDialog(CartActivity.this);
+                progressDialog.show();
+                progressDialog.setCancelable(false);
+                progressDialog.setContentView(R.layout.progress_load_data);
+                progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                //
+                if (loadPreferences("MaKH") == null) {
+                    progressDialog.dismiss();
+                    Intent intent = new Intent(CartActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    String maKH = loadPreferences("MaKH");
                     //
                     DataService dataService = APIService.getService();
-                    Call<Login> callBack = dataService.loginAccount(taiKhoan, matKhau);
-                    callBack.enqueue(new Callback<Login>() {
+                    Call<StringRequest> callBack = dataService.checkDiaChiGH(maKH);
+                    callBack.enqueue(new Callback<StringRequest>() {
                         @Override
-                        public void onResponse(Call<Login> call, Response<Login> response) {
+                        public void onResponse(Call<StringRequest> call, Response<StringRequest> response) {
                             if (response.isSuccessful()) {
-                                Login login = response.body();
-                                if (login.getStatus().equals("1")) {//Da dang nhap
-                                    checkDiaChiGH(login.getKhachHang().getMaKH(), login.getKhachHang().getHoTen(), login.getKhachHang().getSdt());
+                                StringRequest stringRequest = response.body();
+                                if (stringRequest.getStatus().equals("1")) {//Da co dia chi giao hang
                                     progressDialog.dismiss();
-                                } else if (login.getStatus().equals("0")) {//Chua dang nhap
-                                    clearPreferences();
-                                    Intent intent = new Intent(CartActivity.this, LoginActivity.class);
+                                    Log.d("SV", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Da co dia chi giao hang, Status: " + stringRequest.getStatus());
+                                    Intent intent = new Intent(CartActivity.this, ChooseDeliveryInfoActivity.class);
                                     startActivity(intent);
-                                    Log.d("KRT", "CartActivity - Login Preferences sai tk, mk, Status: " + login.getStatus());
+                                    overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+                                    //
+                                } else if (stringRequest.getStatus().equals("0")) {//Chua co dia chi giao hang
+                                    progressDialog.dismiss();
+                                    Log.d("SV", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Chua co dia chi giao hang, Status: " + stringRequest.getStatus());
+                                    Intent intent = new Intent(CartActivity.this, DeliveryInfoActivity.class);
+                                    intent.putExtra("MaKH", maKH);
+                                    intent.putExtra("Mode", 0);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
+                                    //
                                 } else {
-                                    Log.d("KRT", "CartActivity - Login Preferences Status: " + login.getStatus() + " Loi file connect");
+                                    Log.d("SV", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Loi connect: " + stringRequest.getStatus());
                                 }
                             } else {
-                                Log.d("KRT", "CartActivity - Login Preferences Not Success");
+                                Log.d("SV", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Loi ket noi");
                             }
-                            if(progressDialog.isShowing()){
+                            if (progressDialog.isShowing()) {
                                 progressDialog.dismiss();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<Login> call, Throwable t) {
-                            Log.d("KRT", "CartAc - CartActivity Preferences onFailure: " + t.getMessage());
-                            progressDialog.dismiss();
+                        public void onFailure(Call<StringRequest> call, Throwable t) {
+                            Log.d("SV", "CartActivity - Kiem tra dia chi giao hang onFailure: " + t.getMessage());
                         }
                     });
-                } else {//Chua dang nhap
-                    clearPreferences();
-                    Intent intent = new Intent(CartActivity.this, LoginActivity.class);
-                    startActivity(intent);
                 }
             }
         });
@@ -186,14 +191,14 @@ public class CartActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     StringRequest stringRequest = response.body();
                     if (stringRequest.getStatus().equals("1")) {//Da co dia chi giao hang
-                        Log.d("KRT", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Da co dia chi giao hang, Status: " + stringRequest.getStatus());
+                        Log.d("SV", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Da co dia chi giao hang, Status: " + stringRequest.getStatus());
                         Intent intent = new Intent(CartActivity.this, ChooseDeliveryInfoActivity.class);
                         intent.putExtra("MaKH", maKH);
                         startActivity(intent);
                         overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
                         //
                     } else if (stringRequest.getStatus().equals("0")) {//Chua co dia chi giao hang
-                        Log.d("KRT", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Chua co dia chi giao hang, Status: " + stringRequest.getStatus());
+                        Log.d("SV", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Chua co dia chi giao hang, Status: " + stringRequest.getStatus());
                         Intent intent = new Intent(CartActivity.this, DeliveryInfoActivity.class);
                         intent.putExtra("MaKH", maKH);
                         intent.putExtra("Mode", 0);
@@ -201,16 +206,16 @@ public class CartActivity extends AppCompatActivity {
                         overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
                         //
                     } else {
-                        Log.d("KRT", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Loi connect: " + stringRequest.getStatus());
+                        Log.d("SV", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Loi connect: " + stringRequest.getStatus());
                     }
                 } else {
-                    Log.d("KRT", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Loi ket noi");
+                    Log.d("SV", "CartActivity - Kiem tra dia chi giao hang: MaKH: " + maKH + " .Loi ket noi");
                 }
             }
 
             @Override
             public void onFailure(Call<StringRequest> call, Throwable t) {
-                Log.d("KRT", "CartActivity - Kiem tra dia chi giao hang onFailure: " + t.getMessage());
+                Log.d("SV", "CartActivity - Kiem tra dia chi giao hang onFailure: " + t.getMessage());
             }
         });
     }

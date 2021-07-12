@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,7 +44,7 @@ public class ChooseDeliveryInfoActivity extends AppCompatActivity {
     DiaChiAdapter diaChiAdapter;
     TextView txtThemDiaChi;
     Button btnXacNhanDiaChi;
-    String maKH = "", hoten = "", sdt = "", diaChiMerger = "";
+    String maKH = "", maDiaChi = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +57,13 @@ public class ChooseDeliveryInfoActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         //
-        if(getIntent().getStringExtra("MaKH") == null){
+        if (loadPreferences("MaKH") == null) {
+            Intent intent = new Intent(ChooseDeliveryInfoActivity.this, LoginActivity.class);
+            intent.putExtra("Mode", 0);
+            startActivity(intent);
             finish();
-        }
-        else{
-            maKH = getIntent().getStringExtra("MaKH");
+        } else {
+            maKH = loadPreferences("MaKH");
         }
         //
         linkWidget();
@@ -77,6 +81,8 @@ public class ChooseDeliveryInfoActivity extends AppCompatActivity {
                 if(diaChi == null){
                     return;
                 }
+                maDiaChi = diaChi.getMaDiaChi();
+                String diaChiMerger = "";
                 String[] thanhPho = diaChi.getThanhPho().split(";");
                 String[] quan = diaChi.getQuan().split(";");
                 diaChiMerger = diaChi.getDiaChiNha() + ", " + diaChi.getPhuong() + ", ";
@@ -86,8 +92,6 @@ public class ChooseDeliveryInfoActivity extends AppCompatActivity {
                 if(thanhPho.length >= 2){
                     diaChiMerger += thanhPho[1];
                 }
-                hoten = diaChi.getHoTen();
-                sdt = diaChi.getSdt();
                 Toast.makeText(ChooseDeliveryInfoActivity.this, diaChiMerger, Toast.LENGTH_SHORT).show();
             }
             @Override
@@ -129,16 +133,13 @@ public class ChooseDeliveryInfoActivity extends AppCompatActivity {
         btnXacNhanDiaChi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(diaChiMerger.isEmpty() || hoten.isEmpty() || sdt.isEmpty()){
-                    Log.d("KRT","ChooseDeliveryAc - Chưa nhận đc thông tin họ tên, sdt, địa chỉ");
+                if(maDiaChi.isEmpty()){
+                    Log.d("SV","ChooseDeliveryAc - Chưa nhận đc mã địa chỉ");
                     return;
                 }
-                Bundle bundle = new Bundle();
-                bundle.putString("hoTen",hoten);
-                bundle.putString("sdt",sdt);
-                bundle.putString("diaChi",diaChiMerger);
-                Intent intent = new Intent(ChooseDeliveryInfoActivity.this,PaymentActivity.class);
-                intent.putExtra("TTGiaoHang",bundle);
+                Log.d("SV","ChooseDeliveryAc - Put Intent maDiaChi: " + maDiaChi);
+                Intent intent = new Intent(ChooseDeliveryInfoActivity.this, PaymentActivity.class);
+                intent.putExtra("maDiaChi",maDiaChi);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
             }
@@ -169,13 +170,13 @@ public class ChooseDeliveryInfoActivity extends AppCompatActivity {
                     pgBarChooseDC.setVisibility(View.GONE);
                 }
                 else{
-                    Log.d("KRT","ChooseDelivetyInfoActivity - Load địa chỉ Not Success");
+                    Log.d("SV","ChooseDelivetyInfoActivity - Load địa chỉ Not Success");
                 }
             }
 
             @Override
             public void onFailure(Call<List<DiaChi>> call, Throwable t) {
-                Log.d("KRT","ChooseDeliveyyInfoActivity - Load địa chỉ onFailure: " + t.getMessage());
+                Log.d("SV","ChooseDeliveyyInfoActivity - Load địa chỉ onFailure: " + t.getMessage());
             }
         });
     }
@@ -190,18 +191,21 @@ public class ChooseDeliveryInfoActivity extends AppCompatActivity {
                     if(stringRequest.getStatus().equals("1")){
                         if(!maKH.isEmpty()) {
                             loadDiaChi(maKH);
-                            Log.d("KRT", "ChooseDeliveyyInfoActivity - Xoá địa chỉ thành công");
+                            Log.d("SV", "ChooseDeliveyyInfoActivity - Xoá địa chỉ thành công");
                         }
                     }
                     else{
-                        Log.d("KRT", "ChooseDeliveyyInfoActivity - Xoá địa chỉ không thành công");
+                        Log.d("SV", "ChooseDeliveyyInfoActivity - Xoá địa chỉ không thành công");
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<StringRequest> call, Throwable t) {
-                Log.d("KRT", "ChooseDeliveyyInfoActivity - Xoá địa chỉ onFailure: " + t.getMessage());
+                Log.d("SV", "ChooseDeliveyyInfoActivity - Xoá địa chỉ onFailure: " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    xoaDiaChi(maDiaChi);
+                }
             }
         });
     }
@@ -227,5 +231,9 @@ public class ChooseDeliveryInfoActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    public String loadPreferences(String key) {
+        SharedPreferences p = getSharedPreferences("caches", Context.MODE_PRIVATE);
+        return p.getString(key, null);
     }
 }

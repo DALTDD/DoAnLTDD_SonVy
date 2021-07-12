@@ -81,7 +81,6 @@ public class DashboardFragment extends Fragment {
                 fragmentTransaction.replace(R.id.frameLayoutMain,CategoriesFragment.newInstance(theLoaiArrayList.get(position).getMaLoai(), theLoaiArrayList.get(position).getTenTheLoai()),"Categories");
                 //fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-                Log.d("KRT","DashboardFragment - ItemClickListview the loai " + theLoaiArrayList.get(position).getMaLoai());
             }
         });
     }
@@ -114,7 +113,7 @@ public class DashboardFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<List<DanhMuc>> call, Throwable t) {
-                Log.d("KRT","DashboardFragment - GetData Danh mục onFailure: " + t.getMessage());
+                Log.d("SV","DashboardFragment - GetData Danh mục onFailure: " + t.getMessage());
             }
         });
     }
@@ -134,13 +133,13 @@ public class DashboardFragment extends Fragment {
                     theLoaiAdapter.notifyDataSetChanged();
                 }
                 else {
-                    Log.d("KRT","DashboardFragment - GetTheLoaiByDanhMuc Not Success");
+                    Log.d("SV","DashboardFragment - GetTheLoaiByDanhMuc Not Success");
                 }
             }
 
             @Override
             public void onFailure(Call<List<TheLoai>> call, Throwable t) {
-                Log.d("KRT","DashboardFragment - GetTheLoaiByDanhMuc onFailure: " + t.getMessage());
+                Log.d("SV","DashboardFragment - GetTheLoaiByDanhMuc onFailure: " + t.getMessage());
             }
         });
     }

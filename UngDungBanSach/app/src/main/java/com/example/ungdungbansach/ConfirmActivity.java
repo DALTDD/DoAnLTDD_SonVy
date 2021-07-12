@@ -38,6 +38,7 @@ import Model.KhachHang;
 import Model.Login;
 import Model.Order;
 import Model.StringRequest;
+import Model.TTGiaoHang;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,7 +52,7 @@ public class ConfirmActivity extends AppCompatActivity {
     Cart cart;
     XacNhanRecyclerView xacNhanRecyclerView;
     double tongTien = 0, phiVC = 0, thanhTien = 0;
-    String hoTen = "", sdt = "", diaChi = "", maPTTT = "";
+    String maDiaChi = "", maPTVC = "", maPTTT = "", maKH = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +68,29 @@ public class ConfirmActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getBundleExtra("TTThanhToan");
         if (bundle == null) {
             //Dialog loi
-            Log.d("KRT", "ConfirmActivity - Nhận Bundle thất bại");
+            Log.d("SV", "ConfirmActivity - Nhận Bundle thất bại");
             showDialogError("Đã có lỗi xảy ra");
             Intent intent = new Intent(ConfirmActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             this.finish();
         } else {
-            hoTen = bundle.getString("hoTen");
-            sdt = bundle.getString("sdt");
-            diaChi = bundle.getString("diaChi");
+            maDiaChi = bundle.getString("maDiaChi");
+            maPTVC = bundle.getString("maPTVC");
             maPTTT = bundle.getString("maPTTT");
-            Log.d("KRT", "ConfirmActivity - Nhận Bundle thành công: " + hoTen + " - " + sdt + " - " + diaChi + " - " + maPTTT);
+            phiVC = bundle.getDouble("phiGH", 0);
+            Log.d("SV", "ConfirmActivity - Nhận Bundle thành công: maDiaChi: " + maDiaChi + " - maPTVC: " + maPTVC + " - maPTTT: " + maPTTT + " - phiGH: " + phiVC);
         }
+        //
+        if (loadPreferences("MaKH") == null) {
+            Intent intent = new Intent(ConfirmActivity.this, LoginActivity.class);
+            intent.putExtra("Mode", 0);
+            startActivity(intent);
+            finish();
+        } else {
+            maKH = loadPreferences("MaKH");
+        }
+
         //
         linkWidget();
         //
@@ -94,11 +105,6 @@ public class ConfirmActivity extends AppCompatActivity {
             Locale locale = new Locale("vi", "VN");
             NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
             txtThanhTienXacNhan.setText(numberFormat.format(thanhTien));
-            if (thanhTien >= 250000) {
-                phiVC = 0;
-            } else {
-                phiVC = 25000;
-            }
             tongTien = thanhTien + phiVC;
             txtPhiVCXacNhan.setText(numberFormat.format(phiVC));
             txtTongTienXacNhan.setText(numberFormat.format(tongTien));
@@ -119,7 +125,7 @@ public class ConfirmActivity extends AppCompatActivity {
         btnXacNhan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hoTen.isEmpty() || sdt.isEmpty() || diaChi.isEmpty() || maPTTT.isEmpty()) {
+                if (maPTVC.isEmpty() || maDiaChi.isEmpty() || maPTTT.isEmpty()) {
                     //Dialog thong bao loi
                     showDialogError("Hệ thống chưa ghi nhận đầy đủ thông tin");
                     Intent intent = new Intent(ConfirmActivity.this, MainActivity.class);
@@ -141,47 +147,74 @@ public class ConfirmActivity extends AppCompatActivity {
                         DetailOrder detailOrder = new DetailOrder(cartItem.getMaSach(), cartItem.getSoLuong(), cartItem.getGiaKhuyenMai());
                         detailOrderArrayList.add(detailOrder);
                     }
-                    KhachHang infoKH = new KhachHang();
-                    getInfoKhachHang(new CustomCallbackKhachHang() {
+                    DataService dataService = APIService.getService();
+                    Call<TTGiaoHang> callBack = dataService.getTTGHByMaDiaChi(maDiaChi);
+                    callBack.enqueue(new Callback<TTGiaoHang>() {
                         @Override
-                        public void onSucess(String maKH) {
-                            Order order = new Order(maKH, dateFormat.format(Calendar.getInstance().getTime()), tongTien, maPTTT, hoTen, sdt, diaChi, detailOrderArrayList);
-                            Log.d("KRT","ConfirmActivity - Info order: " + maKH + " - " + dateFormat.format(Calendar.getInstance().getTime()) + " - " + tongTien + " - " + maPTTT + " - " + hoTen + " - " + sdt + " - " + diaChi + " - " + detailOrderArrayList.size());
-                            //datHang(order);
-                            DataService dataService = APIService.getService();
-                            Call<StringRequest> callBack = dataService.datHang(order);
-                            callBack.enqueue(new Callback<StringRequest>() {
-                                @Override
-                                public void onResponse(Call<StringRequest> call, Response<StringRequest> response) {
-                                    if (response.isSuccessful()) {
-                                        StringRequest stringRequest = response.body();
-                                        if (stringRequest.getStatus().equals("1")) {
-                                            cart.getInstanceCart().clear();
-                                            Intent intent = new Intent(ConfirmActivity.this, OrderSuccessActivity.class);
-                                            intent.putExtra("MaHoaDon",stringRequest.getResultCode());
-                                            startActivity(intent);
-                                            finish();
-                                            progressDialog.dismiss();
-                                            Log.d("KRT", "ConfirmActivity - Call API đặt hàng thành công, status: " + stringRequest.getStatus() + " - Mã đơn hàng: " + stringRequest.getResultCode());
-                                        } else {
-                                            Toast.makeText(ConfirmActivity.this, "Đặt hàng không thành công. Vui lòng xem lại.", Toast.LENGTH_SHORT).show();
-                                            Log.d("KRT", "ConfirmActivity - Call API đặt hàng không thành công, status: " + stringRequest.getStatus());
+                        public void onResponse(Call<TTGiaoHang> call, Response<TTGiaoHang> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body() == null) {
+                                    //
+                                } else {
+                                    TTGiaoHang ttGiaoHang = response.body();
+                                    String hoTen = "", sdt = "", diaChi = "";
+                                    hoTen = ttGiaoHang.getHoTen();
+                                    sdt = ttGiaoHang.getSdt();
+                                    String[] thanhPho = ttGiaoHang.getThanhPho().split(";");
+                                    String[] quan = ttGiaoHang.getQuan().split(";");
+                                    diaChi = ttGiaoHang.getDiaChiNha() + ", " + ttGiaoHang.getPhuong() + ", ";
+                                    if (quan.length >= 2) {
+                                        diaChi += quan[1] + ", ";
+                                    }
+                                    if (thanhPho.length >= 2) {
+                                        diaChi += thanhPho[1];
+                                    }
+                                    Order order = new Order(maKH, dateFormat.format(Calendar.getInstance().getTime()), tongTien, maPTTT, maPTVC, hoTen, sdt, diaChi, detailOrderArrayList);
+                                    Log.d("SV", "ConfirmActivity - Info order: " + maKH + " - " + dateFormat.format(Calendar.getInstance().getTime()) + " - " + tongTien + " - " + maPTTT + " - " + maPTVC + " - " + hoTen + " - " + sdt + " - " + diaChi + " - " + detailOrderArrayList.size());
+                                    //
+                                    DataService dataService = APIService.getService();
+                                    Call<StringRequest> callBack = dataService.datHang(order);
+                                    callBack.enqueue(new Callback<StringRequest>() {
+                                        @Override
+                                        public void onResponse(Call<StringRequest> call, Response<StringRequest> response) {
+                                            if (response.isSuccessful()) {
+                                                StringRequest stringRequest = response.body();
+                                                if (stringRequest.getStatus().equals("1")) {
+                                                    progressDialog.dismiss();
+                                                    cart.getInstanceCart().clear();
+                                                    Intent intent = new Intent(ConfirmActivity.this, OrderSuccessActivity.class);
+                                                    intent.putExtra("MaDonHang", stringRequest.getResultCode());
+                                                    startActivity(intent);
+                                                    finish();
+                                                    Log.d("SV", "ConfirmActivity - Call API đặt hàng thành công, status: " + stringRequest.getStatus() + " - Mã đơn hàng: " + stringRequest.getResultCode());
+                                                } else {
+                                                    Toast.makeText(ConfirmActivity.this, "Đặt hàng không thành công. Vui lòng xem lại.", Toast.LENGTH_SHORT).show();
+                                                    Log.d("SV", "ConfirmActivity - Call API đặt hàng không thành công, status: " + stringRequest.getStatus());
+                                                }
+                                            } else {
+                                                Toast.makeText(ConfirmActivity.this, "Đặt hàng không thành công. Vui lòng xem lại.", Toast.LENGTH_SHORT).show();
+                                                Log.d("SV", "ConfirmActivity - Call API đặt hàng fail");
+                                            }
+                                            if (progressDialog.isShowing()) {
+                                                progressDialog.dismiss();
+                                            }
                                         }
-                                    } else {
-                                        Toast.makeText(ConfirmActivity.this, "Đặt hàng không thành công. Vui lòng xem lại.", Toast.LENGTH_SHORT).show();
-                                        Log.d("KRT", "ConfirmActivity - Call API đặt hàng fail");
-                                    }
-                                    if(progressDialog.isShowing()){
-                                        progressDialog.dismiss();
-                                    }
+
+                                        @Override
+                                        public void onFailure(Call<StringRequest> call, Throwable t) {
+                                            Log.d("SV", "ConfirmActivity - Call API đặt hàng onFailure : " + t.getMessage());
+                                            progressDialog.dismiss();
+                                        }
+                                    });
                                 }
 
-                                @Override
-                                public void onFailure(Call<StringRequest> call, Throwable t) {
-                                    Log.d("KRT", "ConfirmActivity - Call API đặt hàng onFailure : " + t.getMessage());
-                                    progressDialog.dismiss();
-                                }
-                            });
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<TTGiaoHang> call, Throwable t) {
+
                         }
                     });
                 } else {
@@ -192,7 +225,7 @@ public class ConfirmActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-                if(progressDialog.isShowing()){
+                if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
             }
@@ -209,43 +242,6 @@ public class ConfirmActivity extends AppCompatActivity {
         btnXacNhan = findViewById(R.id.btnXacNhan);
     }
 
-    public void getInfoKhachHang(CustomCallbackKhachHang customCallbackKhachHang) {
-        if (loadPreferences("TaiKhoan") != null && loadPreferences("MatKhau") != null) {
-            String taiKhoan = loadPreferences("TaiKhoan");
-            String matKhau = loadPreferences("MatKhau");
-            //Kiem tra
-            DataService dataService = APIService.getService();
-            Call<Login> callBack = dataService.loginAccount(taiKhoan, matKhau);
-            callBack.enqueue(new Callback<Login>() {
-                @Override
-                public void onResponse(Call<Login> call, Response<Login> response) {
-                    if (response.isSuccessful()) {
-                        Login login = response.body();
-                        if (login.getStatus().equals("1")) {
-                            customCallbackKhachHang.onSucess(login.getKhachHang().getMaKH());
-                            Log.d("KRT", "ConfirmActivity - Login Preferences đã đăng nhập, Status: " + login.getStatus());
-                        } else if (login.getStatus().equals("0")) {
-                            clearPreferences();
-                            Intent intent = new Intent(ConfirmActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                            Log.d("KRT", "ConfirmActivity- Login Preferences sai tk, mk, Status: " + login.getStatus());
-                        } else {
-                            Log.d("KRT", "ConfirmActivity - Login Preferences Status: " + login.getStatus() + " Loi file connect");
-                        }
-                    }
-                }
-                @Override
-                public void onFailure(Call<Login> call, Throwable t) {
-                    Log.d("KRT", "ConfirmActivity - Login Preferences onFailure: " + t.getMessage());
-                }
-            });
-        } else {
-            Intent intent = new Intent(ConfirmActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
 
     public void datHang(Order order) {
         DataService dataService = APIService.getService();
@@ -259,22 +255,23 @@ public class ConfirmActivity extends AppCompatActivity {
                         cart.getInstanceCart().clear();
                         Intent intent = new Intent(ConfirmActivity.this, OrderSuccessActivity.class);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
                         finish();
-                        Log.d("KRT", "ConfirmActivity - Call API đặt hàng thành công, status: " + stringRequest.getStatus() + " - Mã đơn hàng: " + stringRequest.getResultCode());
+                        Log.d("SV", "ConfirmActivity - Call API đặt hàng thành công, status: " + stringRequest.getStatus() + " - Mã đơn hàng: " + stringRequest.getResultCode());
                     } else {
                         Toast.makeText(ConfirmActivity.this, "Đặt hàng không thành công. Vui lòng xem lại.", Toast.LENGTH_SHORT).show();
-                        Log.d("KRT", "ConfirmActivity - Call API đặt hàng không thành công, status: " + stringRequest.getStatus());
+                        Log.d("SV", "ConfirmActivity - Call API đặt hàng không thành công, status: " + stringRequest.getStatus());
                     }
                 } else {
                     Toast.makeText(ConfirmActivity.this, "Đặt hàng không thành công. Vui lòng xem lại.", Toast.LENGTH_SHORT).show();
-                    Log.d("KRT", "ConfirmActivity - Call API đặt hàng fail");
+                    Log.d("SV", "ConfirmActivity - Call API đặt hàng fail");
                 }
 
             }
 
             @Override
             public void onFailure(Call<StringRequest> call, Throwable t) {
-                Log.d("KRT", "ConfirmActivity - Call API đặt hàng onFailure : " + t.getMessage());
+                Log.d("SV", "ConfirmActivity - Call API đặt hàng onFailure : " + t.getMessage());
             }
         });
     }

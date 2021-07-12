@@ -94,7 +94,6 @@ public class SearchActivity extends AppCompatActivity {
                         sachArrayList.clear();
                         sachArrayList.addAll(arrayList);
                         sachSearchAdapter.notifyDataSetChanged();
-                        Log.d("Vy","Get sach by search thanh cong size : "+arrayList.size());
                         lstSearch.setVisibility(View.VISIBLE);
                         txtKetQuaSearch.setVisibility(View.GONE);
                         cardViewSearch.setVisibility(View.GONE);
@@ -111,12 +110,12 @@ public class SearchActivity extends AppCompatActivity {
 
                 }
                 else {
-                    Log.d("Vy","Get sach by search that bai");
+                    Log.d("SV","Get sach by search that bai");
                 }
             }
             @Override
             public void onFailure(Call<List<Sach>> call, Throwable t) {
-                Log.d("Vy","Get sach by search that bai"+t.getMessage());
+                Log.d("SV","Get sach by search that bai"+t.getMessage());
             }
         });
     }

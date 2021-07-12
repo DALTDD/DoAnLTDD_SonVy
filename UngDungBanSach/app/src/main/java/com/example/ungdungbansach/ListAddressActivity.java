@@ -49,6 +49,7 @@ public class ListAddressActivity extends AppCompatActivity {
     ArrayList<DiaChi> arrLstDiaChi;
     ListDCAdapter listDCAdapter;
     String maKH = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +61,13 @@ public class ListAddressActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Sổ địa chỉ");
         }
         //
-        if(getIntent().getStringExtra("MaKH") == null){
+        if (loadPreferences("MaKH") == null) {
+            Intent intent = new Intent(ListAddressActivity.this, LoginActivity.class);
+            intent.putExtra("Mode", 0);
+            startActivity(intent);
             finish();
-        }
-        else{
-            maKH = getIntent().getStringExtra("MaKH");
+        } else {
+            maKH = loadPreferences("MaKH");
         }
         //
         linkWidget();
@@ -81,7 +84,7 @@ public class ListAddressActivity extends AppCompatActivity {
             public void onMenuClick(int position) {
                 Toast.makeText(ListAddressActivity.this, position + "", Toast.LENGTH_SHORT).show();
                 DiaChi diaChi = arrLstDiaChi.get(position);
-                if(diaChi == null){
+                if (diaChi == null) {
                     return;
                 }
                 Dialog dialog = new Dialog(ListAddressActivity.this);
@@ -94,7 +97,7 @@ public class ListAddressActivity extends AppCompatActivity {
                 txtXoaDC = dialog.findViewById(R.id.txtXoaDC);
                 txtHuyDC = dialog.findViewById(R.id.txtHuyDC);
                 //
-                if(diaChi.getDiaChiMacDinh().equals("1")){
+                if (diaChi.getDiaChiMacDinh().equals("1")) {
                     txtDatDCMacDinh.setVisibility(View.GONE);
                     txtXoaDC.setVisibility(View.GONE);
                 }
@@ -102,11 +105,11 @@ public class ListAddressActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        if(!maKH.isEmpty()){
-                            Intent intent = new Intent(ListAddressActivity.this,EditAddressActivity.class);
-                            intent.putExtra("MaDiaChi",diaChi.getMaDiaChi());
-                            intent.putExtra("MaKH",maKH);
-                            intent.putExtra("Mode",1);
+                        if (!maKH.isEmpty()) {
+                            Intent intent = new Intent(ListAddressActivity.this, EditAddressActivity.class);
+                            intent.putExtra("MaDiaChi", diaChi.getMaDiaChi());
+                            intent.putExtra("MaKH", maKH);
+                            intent.putExtra("Mode", 1);
                             startActivity(intent);
                             overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
                         }
@@ -129,11 +132,11 @@ public class ListAddressActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        datDiaChiMacDinh(diaChi.getMaKH(),diaChi.getMaDiaChi());
+                        datDiaChiMacDinh(diaChi.getMaKH(), diaChi.getMaDiaChi());
                     }
                 });
                 //
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dialog.getWindow().setGravity(Gravity.BOTTOM);
                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 dialog.show();
@@ -141,71 +144,71 @@ public class ListAddressActivity extends AppCompatActivity {
         });
         rcListDC.setAdapter(listDCAdapter);
         //
-        rcListDC.setLayoutManager(new LinearLayoutManager(ListAddressActivity.this,RecyclerView.VERTICAL,false));
+        rcListDC.setLayoutManager(new LinearLayoutManager(ListAddressActivity.this, RecyclerView.VERTICAL, false));
         rcListDC.setHasFixedSize(true);
         //
         btnThemListDC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!maKH.isEmpty()){
-                    Intent intent = new Intent(ListAddressActivity.this,DeliveryInfoActivity.class);
-                    intent.putExtra("MaKH",maKH);
-                    intent.putExtra("Mode",1);
+                if (!maKH.isEmpty()) {
+                    Intent intent = new Intent(ListAddressActivity.this, DeliveryInfoActivity.class);
+                    intent.putExtra("MaKH", maKH);
+                    intent.putExtra("Mode", 1);
                     startActivity(intent);
                     overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
                 }
             }
         });
     }
-    public void linkWidget(){
+
+    public void linkWidget() {
         rcListDC = findViewById(R.id.rcListDC);
         pgBarListDC = findViewById(R.id.pgBarListDC);
         btnThemListDC = findViewById(R.id.btnThemListDC);
     }
-    public void load(){
+
+    public void load() {
         if (loadPreferences("TaiKhoan") != null && loadPreferences("MatKhau") != null) {
             String taiKhoan = loadPreferences("TaiKhoan");
             String matKhau = loadPreferences("MatKhau");
             //Kiem tra
             DataService dataService = APIService.getService();
-            Call<Login> callBack = dataService.loginAccount(taiKhoan,matKhau);
+            Call<Login> callBack = dataService.loginAccount(taiKhoan, matKhau);
             callBack.enqueue(new Callback<Login>() {
                 @Override
                 public void onResponse(Call<Login> call, Response<Login> response) {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         Login login = response.body();
-                        Log.d("KRT", "ListAddressAc - Login Preferences Status: "+login.getStatus());
-                        if(login.getStatus().equals("1")){
+                        Log.d("SV", "ListAddressAc - Login Preferences Status: " + login.getStatus());
+                        if (login.getStatus().equals("1")) {
                             maKH = login.getKhachHang().getMaKH();
                             loadDiaChi(login.getKhachHang().getMaKH());
-                        }
-                        else if(login.getStatus().equals("0")){
+                        } else if (login.getStatus().equals("0")) {
                             clearPreferences();
-                            Intent intent = new Intent(ListAddressActivity.this,LoginActivity.class);
+                            Intent intent = new Intent(ListAddressActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
-                        }
-                        else{
-                            Log.d("KRT", "ListAddressAc - Login Preferences Status: "+login.getStatus() + " Loi file connect");
+                        } else {
+                            Log.d("SV", "ListAddressAc - Login Preferences Status: " + login.getStatus() + " Loi file connect");
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Login> call, Throwable t) {
-                    Log.d("KRT", "ListAddressAc - Login Preferences onFailure: " + t.getMessage());
+                    Log.d("SV", "ListAddressAc - Login Preferences onFailure: " + t.getMessage());
                 }
             });
-        }
-        else{
+        } else {
             clearPreferences();
             pgBarListDC.setVisibility(View.GONE);
-            Intent intent = new Intent(ListAddressActivity.this,LoginActivity.class);
+            Intent intent = new Intent(ListAddressActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         }
     }
-    public void loadDiaChi(String maKH){
+
+    public void loadDiaChi(String maKH) {
         pgBarListDC.setVisibility(View.VISIBLE);
         btnThemListDC.setEnabled(false);
         DataService dataService = APIService.getService();
@@ -213,25 +216,28 @@ public class ListAddressActivity extends AppCompatActivity {
         callBackDiaChi.enqueue(new Callback<List<DiaChi>>() {
             @Override
             public void onResponse(Call<List<DiaChi>> call, Response<List<DiaChi>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     ArrayList<DiaChi> arrayList = (ArrayList<DiaChi>) response.body();
                     arrLstDiaChi.clear();
                     arrLstDiaChi.addAll(arrayList);
                     listDCAdapter.notifyDataSetChanged();
                     pgBarListDC.setVisibility(View.GONE);
                     btnThemListDC.setEnabled(true);
-                }
-                else{
-                    Log.d("KRT", "ListAddressActivity - LoadDiaChi Not Success");
+                } else {
+                    Log.d("SV", "ListAddressActivity - LoadDiaChi Not Success");
                 }
             }
 
             @Override
             public void onFailure(Call<List<DiaChi>> call, Throwable t) {
-                Log.d("KRT", "ListAddressActivity - LoadDiaChi onFailure: " + t.getMessage());
+                Log.d("SV", "ListAddressActivity - LoadDiaChi onFailure: " + t.getMessage());
+                if (t.getMessage().equals("timeout")) {
+                    loadDiaChi(maKH);
+                }
             }
         });
     }
+
     public void savePreferences(String key, String value) {
         SharedPreferences p = getSharedPreferences("caches", Context.MODE_PRIVATE);
         SharedPreferences.Editor edCaches = p.edit();
@@ -243,61 +249,68 @@ public class ListAddressActivity extends AppCompatActivity {
         SharedPreferences p = getSharedPreferences("caches", Context.MODE_PRIVATE);
         return p.getString(key, null);
     }
+
     public void clearPreferences() {
         SharedPreferences p = getSharedPreferences("caches", Context.MODE_PRIVATE);
         SharedPreferences.Editor edCaches = p.edit();
         edCaches.clear();
         edCaches.commit();
     }
-    public void xoaDiaChi(String maDiaChi){
+
+    public void xoaDiaChi(String maDiaChi) {
         DataService dataService = APIService.getService();
         Call<StringRequest> callBack = dataService.deleteDiaChi(maDiaChi);
         callBack.enqueue(new Callback<StringRequest>() {
             @Override
             public void onResponse(Call<StringRequest> call, Response<StringRequest> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     StringRequest stringRequest = response.body();
-                    if(stringRequest.getStatus().equals("1")){
-                        if(!maKH.isEmpty()) {
+                    if (stringRequest.getStatus().equals("1")) {
+                        if (!maKH.isEmpty()) {
                             loadDiaChi(maKH);
-                            Log.d("KRT", "ListAddressActivity - Xoá địa chỉ thành công");
+                            Log.d("SV", "ListAddressActivity - Xoá địa chỉ thành công");
                         }
-                    }
-                    else{
-                        Log.d("KRT", "ListAddressActivity - Xoá địa chỉ không thành công");
+                    } else {
+                        Log.d("SV", "ListAddressActivity - Xoá địa chỉ không thành công");
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<StringRequest> call, Throwable t) {
-                Log.d("KRT", "ListAddressActivity - Xoá địa chỉ onFailure: " + t.getMessage());
+                Log.d("SV", "ListAddressActivity - Xoá địa chỉ onFailure: " + t.getMessage());
+                if (t.getMessage().equals("timeout")) {
+                    xoaDiaChi(maDiaChi);
+                }
             }
         });
     }
-    public void datDiaChiMacDinh(String maKH, String maDiaChi){
+
+    public void datDiaChiMacDinh(String maKH, String maDiaChi) {
         DataService dataService = APIService.getService();
-        Call<StringRequest> callBack = dataService.datDiaChiMacDinh(maDiaChi,maKH);
+        Call<StringRequest> callBack = dataService.datDiaChiMacDinh(maDiaChi, maKH);
         callBack.enqueue(new Callback<StringRequest>() {
             @Override
             public void onResponse(Call<StringRequest> call, Response<StringRequest> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     StringRequest stringRequest = response.body();
-                    if(stringRequest.getStatus().equals("1")){
-                        if(!maKH.isEmpty()){
+                    if (stringRequest.getStatus().equals("1")) {
+                        if (!maKH.isEmpty()) {
                             loadDiaChi(maKH);
-                            Log.d("KRT", "ListAddressActivity - Đặt địa chỉ mặc định thành công");
+                            Log.d("SV", "ListAddressActivity - Đặt địa chỉ mặc định thành công");
                         }
-                    }
-                    else{
-                        Log.d("KRT", "ListAddressActivity - Đặt địa chỉ mặc định không thành công");
+                    } else {
+                        Log.d("SV", "ListAddressActivity - Đặt địa chỉ mặc định không thành công");
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<StringRequest> call, Throwable t) {
-                Log.d("KRT", "ListAddressActivity - Đặt địa chỉ mặc định thành công onFailure: " + t.getMessage());
+                Log.d("SV", "ListAddressActivity - Đặt địa chỉ mặc định thành công onFailure: " + t.getMessage());
+                if (t.getMessage().equals("timeout")) {
+                    datDiaChiMacDinh(maKH,maDiaChi);
+                }
             }
         });
     }

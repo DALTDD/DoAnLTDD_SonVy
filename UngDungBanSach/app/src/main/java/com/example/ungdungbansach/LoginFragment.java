@@ -129,7 +129,7 @@ public class LoginFragment extends Fragment {
                     public void onResponse(Call<Login> call, Response<Login> response) {
                         if (response.isSuccessful()) {
                             Login login = response.body();
-                            Log.d("KRT", "LoginFragment - Status login: " + login.getStatus());
+                            Log.d("SV", "LoginFragment - Status login: " + login.getStatus());
                             if (login.getStatus().equals("1")) {
                                 savePreferences("TaiKhoan", edtTenDangNhapLogin.getText().toString().trim());
                                 savePreferences("MatKhau", edtMatKhauLogin.getText().toString().trim());
@@ -150,10 +150,10 @@ public class LoginFragment extends Fragment {
                                 alert.show().getWindow().setLayout(700, 500);
                             } else {
                                 Toast.makeText(getContext(), "LoginFragment - Lỗi File Connect", Toast.LENGTH_SHORT).show();
-                                Log.d("KRT", "LoginFragment - Lỗi File Connect + " + login.getStatus() + login.getKhachHang().getEmail());
+                                Log.d("SV", "LoginFragment - Lỗi File Connect + " + login.getStatus() + login.getKhachHang().getEmail());
                             }
                         } else {
-                            Log.d("KRT", "LoginFragment - fail!");
+                            Log.d("SV", "LoginFragment - fail!");
                         }
                         if(progressDialog.isShowing()){
                             progressDialog.dismiss();
@@ -162,7 +162,7 @@ public class LoginFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Login> call, Throwable t) {
-                        Log.d("KRT", "LoginFragment - onFailure : " + t.getMessage());
+                        Log.d("SV", "LoginFragment - onFailure : " + t.getMessage());
                     }
                 });
             }

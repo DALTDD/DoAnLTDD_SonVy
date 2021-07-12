@@ -40,7 +40,7 @@
     <!--Button-->
     <string name="btnInfoUserThongTin">Thông tin cá nhân</string>
     <string name="btnInfoUserDiaChi">Địa chỉ giao hàng</string>
-    <string name="btnInfoUserDonHang">Quản lý đơn hàng</string>
+    <string name="btnInfoUserDonHang">Lịch sử mua hàng</string>
     <string name="btnInfoUserDangXuat">Đăng xuất</string>
     <string name="btnLuuThongTin">Lưu thông tin</string>
     <string name="btnThanhToan">Thanh toán</string>

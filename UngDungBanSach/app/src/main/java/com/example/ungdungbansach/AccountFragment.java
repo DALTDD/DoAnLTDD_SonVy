@@ -35,6 +35,7 @@ import java.util.Locale;
 import Model.APIService;
 import Model.DataService;
 import Model.DetailOrder;
+import Model.KhachHang;
 import Model.Login;
 import Model.Order;
 import Model.StringRequest;
@@ -44,9 +45,10 @@ import retrofit2.Response;
 
 
 public class AccountFragment extends Fragment {
-    Button btnThongTinCNAccount, btnDiaChiGHAccount, btnQuanLyDHAccount, btnDangXuat,btnDoiMatKhauAccount;
+    Button btnThongTinCNAccount, btnDiaChiGHAccount, btnQuanLyDHAccount, btnDangXuat, btnDoiMatKhauAccount;
     TextView txtTenDNAccount;
     String maKH = "";
+
     public AccountFragment() {
         // Required empty public constructor
     }
@@ -55,7 +57,16 @@ public class AccountFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //
+        if (loadPreferences("MaKH") == null) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.putExtra("Mode", 0);
+            startActivity(intent);
+            getActivity().finish();
+        } else {
+            maKH = loadPreferences("MaKH");
+        }
+        //
     }
 
     @Override
@@ -76,21 +87,14 @@ public class AccountFragment extends Fragment {
         txtTenDNAccount = view.findViewById(R.id.txtTenDNAccount);
         btnDoiMatKhauAccount = view.findViewById(R.id.btnDoiMatKhauAccount);
         //
-        btnQuanLyDHAccount.setEnabled(false);
-        btnDiaChiGHAccount.setEnabled(false);
-        btnThongTinCNAccount.setEnabled(false);
-        btnDoiMatKhauAccount.setEnabled(false);
-        //
-        loadInfo();
-        //
+        getTTKHByMaKH(maKH);
         //Thống tin cá nhân
         btnThongTinCNAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(),InfoUserActivity.class);
+                Intent intent = new Intent(getContext(), InfoUserActivity.class);
                 startActivity(intent);
-                Log.d("KRT", "AccountFragment-BtnThongTinCNAccount - MaKH: " + loadPreferences("MaKH"));
-                getActivity().overridePendingTransition(R.anim.enter_left_to_right,R.anim.exit_right_to_left);
+                getActivity().overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
             }
         });
         //
@@ -98,9 +102,8 @@ public class AccountFragment extends Fragment {
         btnDoiMatKhauAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(),ChangePasswordActivity.class);
+                Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
                 startActivity(intent);
-                Log.d("KRT", "AccountFragment-btnDoiMatKhauAccount - MaKH: " + loadPreferences("MaKH"));
                 getActivity().overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
             }
         });
@@ -108,11 +111,8 @@ public class AccountFragment extends Fragment {
         btnDiaChiGHAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //loadInfoMoveScreen();
                 Intent intent = new Intent(getActivity(), ListAddressActivity.class);
-                intent.putExtra("MaKH", maKH);
                 startActivity(intent);
-                Log.d("KRT", "DiaChiGH - MaKH: " + maKH);
                 getActivity().overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
             }
         });
@@ -120,7 +120,9 @@ public class AccountFragment extends Fragment {
         btnQuanLyDHAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), OrderHistoryActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
             }
         });
         //
@@ -156,119 +158,108 @@ public class AccountFragment extends Fragment {
         return p.getString(key, null);
     }
 
-    public void loadInfoMoveScreen() {
-        if (loadPreferences("TaiKhoan") != null && loadPreferences("MatKhau") != null) {
-            String taiKhoan = loadPreferences("TaiKhoan");
-            String matKhau = loadPreferences("MatKhau");
-            //Kiem tra
-            //
-            ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.show();
-            progressDialog.setCancelable(false);
-            progressDialog.setContentView(R.layout.progress_load_data);
-            progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            //
-            DataService dataService = APIService.getService();
-            Call<Login> callBack = dataService.loginAccount(taiKhoan, matKhau);
-            callBack.enqueue(new Callback<Login>() {
-                @Override
-                public void onResponse(Call<Login> call, Response<Login> response) {
-                    if (response.isSuccessful()) {
-                        Login login = response.body();
-                        Log.d("KRT", "AccountFrag - Login Preferences Status: " + login.getStatus());
-                        if (login.getStatus().equals("1")) {//Da dang nhap
-                            progressDialog.dismiss();
-                            Intent intent = new Intent(getActivity(), ListAddressActivity.class);
-                            intent.putExtra("MaKH", login.getKhachHang().getMaKH());
-                            startActivity(intent);
-                            getActivity().overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
-                        } else if (login.getStatus().equals("0")) {//Da dang nhap sai tk, mk
-                            progressDialog.dismiss();
-                            clearPreferences();
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            startActivity(intent);
-                            getActivity().overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
-                        } else {
-                            progressDialog.dismiss();
-                            Log.d("KRT", "AccountFrag - Login Preferences Status: " + login.getStatus() + " Loi file connect");
-                        }
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<Login> call, Throwable t) {
-                    progressDialog.dismiss();
-                    Log.d("KRT", "AccountFrag - Login Preferences onFailure: " + t.getMessage());
-                }
-            });
-        } else {//Chua dang nhap
-            Log.d("KRT", "AccountFrag - Chưa đăng nhập");
-            clearPreferences();
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    public void loadInfo() {
-        if (loadPreferences("TaiKhoan") != null && loadPreferences("MatKhau") != null && checkLogin() == true) {
-            String taiKhoan = loadPreferences("TaiKhoan");
-            String matKhau = loadPreferences("MatKhau");
-            //Kiem tra
-            //
-            ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.show();
-            progressDialog.setCancelable(false);
-            progressDialog.setContentView(R.layout.progress_load_data);
-            progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            //
-            DataService dataService = APIService.getService();
-            Call<Login> callBack = dataService.loginAccount(taiKhoan, matKhau);
-            callBack.enqueue(new Callback<Login>() {
-                @Override
-                public void onResponse(Call<Login> call, Response<Login> response) {
-                    if (response.isSuccessful()) {
-                        Login login = response.body();
-                        Log.d("KRT", "AccountFragment - Login Preferences Status: " + login.getStatus());
-                        if (login.getStatus().equals("1")) {//Da dang nhap
-                            if(login.getKhachHang().getHoTen() != null){
-                                txtTenDNAccount.setText(login.getKhachHang().getHoTen());
-                            }
-                            else{
-                                txtTenDNAccount.setText(login.getKhachHang().getTaiKhoan());
-                            }
-                            maKH = login.getKhachHang().getMaKH();
-                            btnQuanLyDHAccount.setEnabled(true);
-                            btnDiaChiGHAccount.setEnabled(true);
-                            btnThongTinCNAccount.setEnabled(true);
-                            btnDoiMatKhauAccount.setEnabled(true);
-                        } else if (login.getStatus().equals("0")) {//Da dang nhap sai tk, mk
-                            clearPreferences();
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            intent.putExtra("Mode",0);
-                            startActivity(intent);
-                            getActivity().finish();
+    public void getTTKHByMaKH(String MaKH) {
+        //
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setContentView(R.layout.progress_load_data);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        DataService dataService = APIService.getService();
+        //
+        Call<KhachHang> callback = dataService.getTTKHByMaKH(MaKH);
+        callback.enqueue(new Callback<KhachHang>() {
+            @Override
+            public void onResponse(Call<KhachHang> call, Response<KhachHang> response) {
+                if (response.isSuccessful()) {
+                    KhachHang khachHang = response.body();
+                    if (khachHang != null) {
+                        if (khachHang.getHoTen() != null) {
+                            txtTenDNAccount.setText(khachHang.getHoTen());
                         } else {
-                            Log.d("KRT", "AccountFrag - Login Preferences Status: " + login.getStatus() + " Loi file connect");
+                            txtTenDNAccount.setText(khachHang.getTaiKhoan());
                         }
                     }
                     progressDialog.dismiss();
+                    Log.d("SV", "AccountFragment - getTTKHByMaKH- MaKH:" + khachHang.getMaKH());
+                } else {
+                    Log.d("SV", "AccountFragment - getTTKHByMaKH Not Success");
                 }
-
-                @Override
-                public void onFailure(Call<Login> call, Throwable t) {
+                if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
-                    Log.d("KRT", "AccountFrag - Login Preferences onFailure: " + t.getMessage());
                 }
-            });
-        } else {//Chua dang nhap
-            Log.d("KRT", "AccountFragment - Chưa đăng nhập");
-            clearPreferences();
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.putExtra("Mode",0);
-            startActivity(intent);
-            getActivity().finish();
-        }
+            }
+
+            @Override
+            public void onFailure(Call<KhachHang> call, Throwable t) {
+                Log.d("SV", "AccountFragment - getTTKHByMaKH onFailure " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    getTTKHByMaKH(maKH);
+                }
+            }
+        });
     }
+
+//    public void loadInfo() {
+//        if (loadPreferences("TaiKhoan") != null && loadPreferences("MatKhau") != null && checkLogin() == true) {
+//            String taiKhoan = loadPreferences("TaiKhoan");
+//            String matKhau = loadPreferences("MatKhau");
+//            //Kiem tra
+//            //
+//            ProgressDialog progressDialog = new ProgressDialog(getContext());
+//            progressDialog.show();
+//            progressDialog.setCancelable(false);
+//            progressDialog.setContentView(R.layout.progress_load_data);
+//            progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+//            //
+//            DataService dataService = APIService.getService();
+//            Call<Login> callBack = dataService.loginAccount(taiKhoan, matKhau);
+//            callBack.enqueue(new Callback<Login>() {
+//                @Override
+//                public void onResponse(Call<Login> call, Response<Login> response) {
+//                    if (response.isSuccessful()) {
+//                        Login login = response.body();
+//                        Log.d("SV", "AccountFragment - Login Preferences Status: " + login.getStatus());
+//                        if (login.getStatus().equals("1")) {//Da dang nhap
+//                            if (login.getKhachHang().getHoTen() != null) {
+//                                txtTenDNAccount.setText(login.getKhachHang().getHoTen());
+//                            } else {
+//                                txtTenDNAccount.setText(login.getKhachHang().getTaiKhoan());
+//                            }
+//                            maKH = login.getKhachHang().getMaKH();
+//                            btnQuanLyDHAccount.setEnabled(true);
+//                            btnDiaChiGHAccount.setEnabled(true);
+//                            btnThongTinCNAccount.setEnabled(true);
+//                            btnDoiMatKhauAccount.setEnabled(true);
+//                        } else if (login.getStatus().equals("0")) {//Da dang nhap sai tk, mk
+//                            clearPreferences();
+//                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+//                            intent.putExtra("Mode", 0);
+//                            startActivity(intent);
+//                            getActivity().finish();
+//                        } else {
+//                            Log.d("SV", "AccountFrag - Login Preferences Status: " + login.getStatus() + " Loi file connect");
+//                        }
+//                    }
+//                    progressDialog.dismiss();
+//                }
+//
+//                @Override
+//                public void onFailure(Call<Login> call, Throwable t) {
+//                    progressDialog.dismiss();
+//                    Log.d("SV", "AccountFrag - Login Preferences onFailure: " + t.getMessage());
+//                }
+//            });
+//        } else {//Chua dang nhap
+//            Log.d("KRT", "AccountFragment - Chưa đăng nhập");
+//            clearPreferences();
+//            Intent intent = new Intent(getActivity(), LoginActivity.class);
+//            intent.putExtra("Mode", 0);
+//            startActivity(intent);
+//            getActivity().finish();
+//        }
+//    }
 
     public Boolean checkLogin() {
         SharedPreferences p = getActivity().getSharedPreferences("caches", Context.MODE_PRIVATE);

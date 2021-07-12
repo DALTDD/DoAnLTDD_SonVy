@@ -164,7 +164,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                         btnThemGioHang.setEnabled(true);
                     }
                 } else {
-                    Log.d("KRT", "DetailActivity - Call API chi tiet san pham : Null");
+                    Log.d("SV", "DetailActivity - Call API chi tiet san pham : Null");
                 }
                 progressDialog.dismiss();
             }
@@ -172,7 +172,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onFailure(Call<Sach> call, Throwable t) {
                 progressDialog.dismiss();
-                Log.d("KRT", "DetailActivity - Call API chi tiet san pham onFailure: " + t.getMessage());
+                Log.d("SV", "DetailActivity - Call API chi tiet san pham onFailure: " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    loadDetailSach(maSach);
+                }
             }
         });
     }
@@ -185,19 +188,22 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             public void onResponse(Call<List<SachLite>> call, Response<List<SachLite>> response) {
                 if (response.isSuccessful()) {
                     ArrayList<SachLite> arrayList = (ArrayList<SachLite>) response.body();
-                    Log.d("KRT", "DetailActivity - Lay sach cung the loai random CTSP size = " + arrayList.size());
+                    Log.d("SV", "DetailActivity - Lay sach cung the loai random CTSP size = " + arrayList.size());
                     arrLstSach.clear();
                     arrLstSach.addAll(arrayList);
                     sachAdapterRecyclerView.notifyDataSetChanged();
                 }
                 else{
-                    Log.d("KRT", "DetailActivity - Lay sach cung the loai random CTSP Not Success");
+                    Log.d("SV", "DetailActivity - Lay sach cung the loai random CTSP Not Success");
                 }
             }
 
             @Override
             public void onFailure(Call<List<SachLite>> call, Throwable t) {
-                Log.d("KRT", "DetailActivity - Lay sach cung the loai random CTSP onFailure: " + t.getMessage());
+                Log.d("SV", "DetailActivity - Lay sach cung the loai random CTSP onFailure: " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    loadSachByTheLoaiRandom(maLoai, maSach);
+                }
             }
         });
     }
@@ -225,7 +231,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 cartItem.setSoLuong(soLuong);
                 cart.getInstanceCart().add(cartItem);
             }
-            Log.d("KRT","DetailActivity - So luong mat hang trong gio hang sau khi them: " + cart.getInstanceCart().size());
+            Log.d("SV","DetailActivity - So luong mat hang trong gio hang sau khi them: " + cart.getInstanceCart().size());
             showDialogGH(soLuong);
         }
         if (v.equals(imgMinus)) {
@@ -246,14 +252,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private class loadData extends AsyncTask<String, Void, Void> {
 
-        @Override
-        protected Void doInBackground(String... strings) {
-            loadDetailSach(strings[0]);
-            return null;
-        }
-    }
 
     @Override
     public void onBackPressed() {

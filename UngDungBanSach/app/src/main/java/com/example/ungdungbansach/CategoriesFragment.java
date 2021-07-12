@@ -95,7 +95,7 @@ public class CategoriesFragment extends Fragment {
         });
         rcCategories.setLayoutManager(new GridLayoutManager(getContext(), 2));
         rcCategories.setAdapter(sachAdapterRecyclerView);
-        Log.d("Vy", "Ma loai get bundle caegories : " + maLoai);
+        Log.d("SV", "Ma loai get bundle caegories : " + maLoai);
         getSachByTheLoai(maLoai);
         if(String.valueOf(maLoai) == String.valueOf(-1)){
             getAllSachByTheLoai();
@@ -121,15 +121,15 @@ public class CategoriesFragment extends Fragment {
                     sachArrayList.clear();
                     sachArrayList.addAll(arrayList);
                     sachAdapterRecyclerView.notifyDataSetChanged();
-                    Log.d("Vy", "Load sach theo the loai " + arrayList.size());
+                    Log.d("SV", "Load sach theo the loai " + arrayList.size());
                 } else {
-                    Log.d("Vy", "Goi sach by the loai that bai");
+                    Log.d("SV", "Goi sach by the loai that bai");
                 }
             }
 
             @Override
             public void onFailure(Call<List<SachLite>> call, Throwable t) {
-                Log.d("Vy", "Goi sach by the loai that bai" + t.getMessage());
+                Log.d("SV", "Goi sach by the loai that bai" + t.getMessage());
             }
         });
     }
@@ -164,7 +164,6 @@ public class CategoriesFragment extends Fragment {
                 appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 appCompatActivity.getSupportActionBar().setHomeButtonEnabled(false);
                 appCompatActivity.getSupportActionBar().setTitle("Danh mục");
-                Toast.makeText(getContext(), "Click menu", Toast.LENGTH_SHORT).show();
                 return true;
                 default:
                     return super.onOptionsItemSelected(item);

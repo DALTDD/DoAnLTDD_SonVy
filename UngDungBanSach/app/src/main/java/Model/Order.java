@@ -20,6 +20,9 @@ public class Order {
     @SerializedName("MaPTTT")
     @Expose
     private String maPTTT;
+    @SerializedName("MaPTVC")
+    @Expose
+    private String maPTVC;
     @SerializedName("HoTen")
     @Expose
     private String hoTen;
@@ -36,17 +39,25 @@ public class Order {
     public Order() {
     }
 
-    public Order(String maKH, String ngayDat, double thanhTien, String maPTTT, String hoTen, String sdt, String diaChi, ArrayList<DetailOrder> detailOrder) {
+    public Order(String maKH, String ngayDat, double thanhTien, String maPTTT, String maPTVC, String hoTen, String sdt, String diaChi, ArrayList<DetailOrder> detailOrder) {
         this.maKH = maKH;
         this.ngayDat = ngayDat;
         this.thanhTien = thanhTien;
         this.maPTTT = maPTTT;
+        this.maPTVC = maPTVC;
         this.hoTen = hoTen;
         this.sdt = sdt;
         this.diaChi = diaChi;
         this.detailOrder = detailOrder;
     }
 
+    public String getMaPTVC() {
+        return maPTVC;
+    }
+
+    public void setMaPTVC(String maPTVC) {
+        this.maPTVC = maPTVC;
+    }
     public String getMaKH() {
         return maKH;
     }

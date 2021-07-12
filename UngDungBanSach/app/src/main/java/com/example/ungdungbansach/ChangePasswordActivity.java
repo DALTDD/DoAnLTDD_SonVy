@@ -42,8 +42,18 @@ public class ChangePasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+        //
         linkControl();
-        maKH = loadPreferences("MaKH");
+        //
+        if (loadPreferences("MaKH") == null) {
+            Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
+            intent.putExtra("Mode", 0);
+            startActivity(intent);
+            finish();
+        } else {
+            maKH = loadPreferences("MaKH");
+        }
+        //
         matKhau = loadPreferences("MatKhau");
         if(getSupportActionBar() != null){
             getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.color_gradient));
@@ -105,7 +115,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     return;
                 }
 
-                Log.d("KRT", "ChangePasswordActivity-Đổi mật khẩu - MaKH:" + maKH);
+                Log.d("KRT", "ChangePasswordActivity - Đổi mật khẩu - MaKH:" + maKH);
                 DataService dataService = APIService.getService();
                 Call<StringRequest> callback = dataService.updateMatKhauKH(maKH,matKhauMoiEdit);
                 callback.enqueue(new Callback<StringRequest>() {
@@ -114,7 +124,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         if(response.isSuccessful()){
                             StringRequest stringRequest = response.body();
                             if(stringRequest.getStatus().equals("1")){
-                                Log.d("KRT", "ChangePasswordActivity-Đổi mật khẩu - Thành công");
+                                Log.d("SV", "ChangePasswordActivity-Đổi mật khẩu - Thành công");
                                 savePreferences("MatKhau",matKhauMoiEdit);
                                 AlertDialog.Builder alert = new AlertDialog.Builder(ChangePasswordActivity.this);
                                 alert.setTitle("Thông báo");
@@ -131,17 +141,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
                                 alert.show();
                             }
                             else {
-                                Log.d("KRT", "ChangePasswordActivity-Đổi mật khẩu - Thất bại");
+                                Log.d("SV", "ChangePasswordActivity-Đổi mật khẩu - Thất bại");
                             }
                         }
                         else {
-                            Log.d("KRT", "ChangePasswordActivity-Đổi mật khẩu - Connect not Success");
+                            Log.d("SV", "ChangePasswordActivity-Đổi mật khẩu - Connect not Success");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<StringRequest> call, Throwable t) {
-                        Log.d("KRT", "ChangePasswordActivity-Đổi mật khẩu - onFailure"+t.getMessage());
+                        Log.d("SV", "ChangePasswordActivity - Đổi mật khẩu - onFailure"+t.getMessage());
                     }
                 });
             }

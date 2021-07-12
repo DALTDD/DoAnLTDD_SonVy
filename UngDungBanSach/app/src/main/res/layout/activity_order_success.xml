@@ -37,7 +37,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:text="Bạn đã đặt hàng thành công. + gì đó ..........."
+        android:text="Bạn đã đặt hàng thành công"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="17sp"
@@ -47,20 +47,20 @@
 
     <Button
         android:id="@+id/btnTiepTucMH"
-        android:background="@drawable/custom_btn_gradient"
-        app:backgroundTint="@null"
         android:layout_width="0dp"
         android:layout_height="44dp"
-        android:textAllCaps="false"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
-        android:text="Tiếp tục mua hàng"
+        android:background="@drawable/custom_btn_gradient"
         android:letterSpacing="0"
+        android:text="Tiếp tục mua hàng"
+        android:textAllCaps="false"
         android:textSize="18sp"
+        app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView35" />
+        app:layout_constraintTop_toBottomOf="@+id/txtMaDHSuccsess" />
 
     <Button
         android:id="@+id/btnXemCTDH"
@@ -102,4 +102,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtMaDHSuccsess"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="32dp"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView35" />
 </androidx.constraintlayout.widget.ConstraintLayout>

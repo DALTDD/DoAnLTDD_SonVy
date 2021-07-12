@@ -28,11 +28,15 @@ import java.util.List;
 import java.util.Locale;
 
 import Adapter.PTTTAdapter;
+import Adapter.PTVCAdapter;
 import Model.APIService;
 import Model.Cart;
 import Model.CartItem;
 import Model.DataService;
 import Model.OnCallBackPTTT;
+import Model.OnCallBackPTVC;
+import Model.OnCallBackPhiVC;
+import Model.PhiVanChuyen;
 import Model.PhuongThucTT;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,14 +46,16 @@ public class PaymentActivity extends AppCompatActivity {
     View includeStatePayment;
     StateProgressBar stateProgressBar;
     ProgressBar pgBarPayment;
-    RadioButton rdbtnPTGH;
-    RecyclerView rcPTTT;
+    RecyclerView rcPTTT,rcPTVC;
     TextView txtThanhTienThanhToan, txtPhiVCThanhToan, txtTongTienThanhToan;
     ArrayList<PhuongThucTT> arrLstPTTT;
     PTTTAdapter ptttAdapter;
+    PhiVanChuyen phiVanChuyen;
+    PTVCAdapter ptvcAdapter;
     Cart cart;
     Button btnThanhToanGiaoHang;
-    String hoTen = "", sdt = "", diaChi = "", maPTTT = "";
+    String maDiaChi = "", maPTTT = "", maPTVC = "";
+    double phiGH = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,18 +67,17 @@ public class PaymentActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         //
-        //
-        Bundle bundle = getIntent().getBundleExtra("TTGiaoHang");
-        if(bundle == null){
-            showDialogError("Đã có lỗi xảy ra");
+        if(getIntent().getStringExtra("maDiaChi") == null){
+           // showDialogError("Đã có lỗi xảy ra");
+            Log.d("SV","PaymentActivity - Null, MaDiaChi: " + getIntent().getStringExtra(maDiaChi));
            //Dialog thong bao bundle null
-           this.finish();
+           //this.finish();
+            finish();
+            return;
         }
         else {
-            hoTen = bundle.getString("hoTen");
-            sdt = bundle.getString("sdt");
-            diaChi = bundle.getString("diaChi");
-            Log.d("KRT","PaymentActivity - Nhận Bundle thành công: " + hoTen + " - " + sdt + " - " + diaChi);
+            maDiaChi = getIntent().getStringExtra("maDiaChi");
+            Log.d("SV","PaymentActivity - Nhận Intent thành công, MaDiaChi: " + maDiaChi);
         }
         //
         linkWidget();
@@ -80,6 +85,7 @@ public class PaymentActivity extends AppCompatActivity {
         btnThanhToanGiaoHang.setEnabled(false);
         //
         arrLstPTTT = new ArrayList<>();
+        phiVanChuyen = new PhiVanChuyen();
         //
 
         //
@@ -87,8 +93,6 @@ public class PaymentActivity extends AppCompatActivity {
         stateProgressBar.setStateDescriptionData(descriptionData);
         stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.TWO);
         //
-        rcPTTT.setLayoutManager(new LinearLayoutManager(PaymentActivity.this,RecyclerView.VERTICAL,false));
-        rcPTTT.setHasFixedSize(true);
         ptttAdapter = new PTTTAdapter(PaymentActivity.this, arrLstPTTT, new OnCallBackPTTT() {
             @Override
             public void onRadioButtonClick(int position) {
@@ -97,25 +101,43 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
         rcPTTT.setAdapter(ptttAdapter);
+        rcPTTT.setLayoutManager(new LinearLayoutManager(PaymentActivity.this,RecyclerView.VERTICAL,false));
+        rcPTTT.setHasFixedSize(true);
         loadDataPTTT();
         //
-        loadGiaTriDonHang();
+        loadPTVC(new OnCallBackPhiVC() {
+            @Override
+            public void onSuccess(PhiVanChuyen phiVanChuyen) {
+                ptvcAdapter = new PTVCAdapter(phiVanChuyen, PaymentActivity.this, new OnCallBackPTVC() {
+                    @Override
+                    public void onRadioButtonClick(int position) {
+                        maPTVC = phiVanChuyen.getPTVanChuyen().get(position).getMaPTVC();
+                        loadGiaTriDonHang(Double.parseDouble(phiVanChuyen.getMienPhiVC()),Double.parseDouble(phiVanChuyen.getPTVanChuyen().get(position).getPhiVC()));
+                        Toast.makeText(PaymentActivity.this, phiVanChuyen.getPTVanChuyen().get(position).getTenPTVC(), Toast.LENGTH_SHORT).show();
+                    }
+                }, tinhThanhTienCart());
+                rcPTVC.setAdapter(ptvcAdapter);
+            }
+        });
+        //
+        rcPTVC.setLayoutManager(new LinearLayoutManager(PaymentActivity.this,RecyclerView.VERTICAL,false));
+        rcPTVC.setHasFixedSize(true);
         //
         btnThanhToanGiaoHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(hoTen.isEmpty() || sdt.isEmpty() || diaChi.isEmpty() || maPTTT.isEmpty()){
+                if(maDiaChi.isEmpty() || maPTTT.isEmpty() || maPTVC.isEmpty()){
                     //Dialog thong bao loi
                     showDialogError("Hệ thống chưa ghi được thông tin");
                     return;
                 }
                 Bundle bundleTT = new Bundle();
-                bundle.putString("hoTen",hoTen);
-                bundle.putString("sdt",sdt);
-                bundle.putString("diaChi",diaChi);
-                bundle.putString("maPTTT",maPTTT);
+                bundleTT.putString("maDiaChi",maDiaChi);
+                bundleTT.putString("maPTTT",maPTTT);
+                bundleTT.putString("maPTVC",maPTVC);
+                bundleTT.putDouble("phiGH",phiGH);
                 Intent intent = new Intent(PaymentActivity.this, ConfirmActivity.class);
-                intent.putExtra("TTThanhToan",bundle);
+                intent.putExtra("TTThanhToan",bundleTT);
                 startActivity(intent);
                 overridePendingTransition(R.anim.enter_left_to_right,R.anim.exit_right_to_left);
             }
@@ -125,7 +147,7 @@ public class PaymentActivity extends AppCompatActivity {
         pgBarPayment = findViewById(R.id.pgBarPayment);
         includeStatePayment = findViewById(R.id.includeStateConfirm);
         stateProgressBar = includeStatePayment.findViewById(R.id.stateProgressbar);
-        rdbtnPTGH = findViewById(R.id.rdbtnPTGH);
+        rcPTVC = findViewById(R.id.rcPTVC);
         rcPTTT = findViewById(R.id.rcPTTT);
         txtThanhTienThanhToan = findViewById(R.id.txtThanhTienThanhToan);
         txtPhiVCThanhToan = findViewById(R.id.txtPhiVCThanhToan);
@@ -145,10 +167,10 @@ public class PaymentActivity extends AppCompatActivity {
                     arrLstPTTT.clear();
                     arrLstPTTT.addAll(arrayListRespone);
                     ptttAdapter.notifyDataSetChanged();
-                    Log.d("KRT","PaymentActivity - Call API PTT size: " + arrayListRespone.size());
+                    Log.d("SV","PaymentActivity - Call API PTTT size: " + arrayListRespone.size());
                 }
                 else{
-                    Log.d("KRT","PaymentActivity - Call API PTT fail!");
+                    Log.d("SV","PaymentActivity - Call API PTTT Not Success");
                 }
                 pgBarPayment.setVisibility(View.GONE);
                 btnThanhToanGiaoHang.setEnabled(true);
@@ -156,27 +178,74 @@ public class PaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<PhuongThucTT>> call, Throwable t) {
-                Log.d("KRT","PaymentActivity - Call API PTT onFailure : " + t.getMessage());
+                Log.d("SV","PaymentActivity - Call API PTTT onFailure : " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    loadDataPTTT();
+                }
             }
         });
     }
-    public void loadGiaTriDonHang(){
+    public void loadPTVC(OnCallBackPhiVC onCallBackPhiVC){
+        //
+        ProgressDialog progressDialog = new ProgressDialog(PaymentActivity.this);
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setContentView(R.layout.progress_load_data);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        //
+        DataService dataService = APIService.getService();
+        Call<PhiVanChuyen> callBack = dataService.getPTVC();
+        callBack.enqueue(new Callback<PhiVanChuyen>() {
+            @Override
+            public void onResponse(Call<PhiVanChuyen> call, Response<PhiVanChuyen> response) {
+                if(response.isSuccessful()){
+                    PhiVanChuyen phiVC = response.body();
+                    onCallBackPhiVC.onSuccess(phiVC);
+                    if(phiVC.getPTVanChuyen() != null){
+                        Log.d("SV","PaymentActivity - Call API PTVC size: " + phiVC.getPTVanChuyen().size());
+                    }
+                    else {
+                        Log.d("SV","PaymentActivity - Call API PTVC null");
+                    }
+                    progressDialog.dismiss();
+                }
+                else{
+                    Log.d("SV","PaymentActivity - Call API PTVC Not Success");
+                }
+                if(progressDialog.isShowing()){
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PhiVanChuyen> call, Throwable t) {
+                Log.d("SV","PaymentActivity - Call API PTVC onFailure : " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                }
+            }
+        });
+    }
+    public void loadGiaTriDonHang(double phiMienPhi, double phiVC){
+        double tongTien = tinhThanhTienCart();
+        phiGH = phiVC;
+        if(tongTien >= phiMienPhi)
+        {
+            phiGH = 0;
+        }
+        Locale locale = new Locale("vi","VN");
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+        txtThanhTienThanhToan.setText(numberFormat.format(tongTien));
+        txtPhiVCThanhToan.setText(numberFormat.format(phiGH));
+        txtTongTienThanhToan.setText(numberFormat.format(tongTien+phiGH));
+    }
+    public double tinhThanhTienCart(){
         double tongTien = 0;
         double phiVC = 25000;
         for (CartItem cartItem : cart.getInstanceCart()){
             tongTien += cartItem.getThanhTien();
         }
-        Locale locale = new Locale("vi","VN");
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
-        txtThanhTienThanhToan.setText(numberFormat.format(tongTien));
-        if(tongTien >= 250000){
-            phiVC = 0;
-            rdbtnPTGH.setText("Giao hàng tiêu chuẩn: 0đ");
-        }
-        txtPhiVCThanhToan.setText(numberFormat.format(phiVC));
-        txtTongTienThanhToan.setText(numberFormat.format(tongTien+phiVC));
+        return tongTien;
     }
-
 
     @Override
     public void onBackPressed() {

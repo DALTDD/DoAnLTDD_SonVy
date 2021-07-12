@@ -12,7 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UngDungBanSach"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChangePasswordActivity"></activity>
+        <activity android:name=".DetailOrderActivity">
+
+        </activity>
+        <activity android:name=".OrderHistoryActivity" />
+        <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".MyProfileActivity" />
         <activity android:name=".ListAddressActivity" />
         <activity android:name=".EditAddressActivity" />
@@ -39,11 +43,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".InfoAddressActivity" />
-        <activity android:name=".InfoUserActivity">
-
-        </activity>
+        <activity android:name=".InfoUserActivity" />
         <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.NoActionBar" />
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".MainActivity"

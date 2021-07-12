@@ -102,7 +102,7 @@ public class EditAddressActivity extends AppCompatActivity {
                 } else {
                     txtEditQuan.setText("");
                     txtEditPhuong.setText("");
-                    txtEditQuan.setEnabled(true);
+                    //txtEditQuan.setEnabled(true);
                     txtEditPhuong.setEnabled(false);
                 }
             }
@@ -125,7 +125,7 @@ public class EditAddressActivity extends AppCompatActivity {
                     txtEditPhuong.setEnabled(false);
                 } else {
                     txtEditPhuong.setText("");
-                    txtEditPhuong.setEnabled(true);
+                    //txtEditPhuong.setEnabled(true);
                 }
             }
 
@@ -177,7 +177,7 @@ public class EditAddressActivity extends AppCompatActivity {
                             ResultCity resultCity = (ResultCity) arrayAdapter.getItem(position);
                             txtEditThanhPho.setText(resultCity.getName());
                             maThanhPho = resultCity.getCode();
-                            Log.d("KRT", "EditAddressAc - Ma thanh pho selected: " + maThanhPho);
+                            Log.d("SV", "EditAddressAc - Ma thanh pho selected: " + maThanhPho);
                             loadDataDictricts(maThanhPho);
                             dialog.dismiss();
                         }
@@ -231,7 +231,7 @@ public class EditAddressActivity extends AppCompatActivity {
                             ResultDictrict resultDictrict = (ResultDictrict) arrayAdapter.getItem(position);
                             txtEditQuan.setText(resultDictrict.getName());
                             maQuan = resultDictrict.getCode();
-                            Log.d("KRT", "EditAddressAc - Ma quan selected: " + maQuan);
+                            Log.d("SV", "EditAddressAc - Ma quan selected: " + maQuan);
                             loadDataWards(maQuan);
                             dialog.dismiss();
                         }
@@ -286,7 +286,7 @@ public class EditAddressActivity extends AppCompatActivity {
                             ResultWard resultWard = (ResultWard) arrayAdapter.getItem(position);
                             txtEditPhuong.setText(resultWard.getName());
                             String ward = resultWard.getCode();
-                            Log.d("KRT", "EditAddressAc - Ma Phuong selected: " + ward);
+                            Log.d("SV", "EditAddressAc - Ma Phuong selected: " + ward);
                             dialog.dismiss();
                         }
                     });
@@ -385,21 +385,21 @@ public class EditAddressActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     StringRequest stringRequest = response.body();
                                     if (stringRequest.getStatus().equals("1")) {
-                                        Log.d("KRT", "EditAddressAc - Sửa thành công");
+                                        Log.d("SV", "EditAddressAc - Sửa thành công");
                                     }
                                     else {
-                                        Log.d("KRT", "EditAddressAc - Sửa không thành công");
+                                        Log.d("SV", "EditAddressAc - Sửa không thành công");
                                     }
                                 }
                                 else {
-                                    Log.d("KRT", "EditAddressAc - Sửa lỗi Not Successful");
+                                    Log.d("SV", "EditAddressAc - Sửa lỗi Not Successful");
                                 }
                                 progressDialog.dismiss();
                                 moveScreen();
                             }
                             @Override
                             public void onFailure(Call<StringRequest> call, Throwable t) {
-                                Log.d("KRT", "EditAddressAc - Sửa onFailure: " + t.getMessage());
+                                Log.d("SV", "EditAddressAc - Sửa onFailure: " + t.getMessage());
                                 progressDialog.dismiss();
                                 moveScreen();
                             }
@@ -475,16 +475,16 @@ public class EditAddressActivity extends AppCompatActivity {
                     Citys citysResponse = response.body();
                     citys = citysResponse;
                     txtEditThanhPho.setEnabled(true);
-                    Log.d("KRT", "EditAddressActivity - Call API Citys size: " + citys.getResults().size());
+                    Log.d("SV", "EditAddressActivity - Call API Citys size: " + citys.getResults().size());
                 } else {
-                    Log.d("KRT", "EditAddressActivity - Call API Citys Not Success");
+                    Log.d("SV", "EditAddressActivity - Call API Citys Not Success");
                 }
 
             }
 
             @Override
             public void onFailure(Call<Citys> call, Throwable t) {
-                Log.d("KRT", "EditAddressActivity - Call API Citys onFailure: " + t.getMessage());
+                Log.d("SV", "EditAddressActivity - Call API Citys onFailure: " + t.getMessage());
             }
         });
     }
@@ -499,15 +499,16 @@ public class EditAddressActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Dictricts dictrictsResponse = response.body();
                     dictricts = dictrictsResponse;
-                    Log.d("KRT", "EditAddressActivity - Call API Dictricts size: " + dictricts.getResults().size());
+                    txtEditQuan.setEnabled(true);
+                    Log.d("SV", "EditAddressActivity - Call API Dictricts size: " + dictricts.getResults().size());
                 } else {
-                    Log.d("KRT", "EditAddressActivity - Call API Dictricts fail");
+                    Log.d("SV", "EditAddressActivity - Call API Dictricts fail");
                 }
             }
 
             @Override
             public void onFailure(Call<Dictricts> call, Throwable t) {
-                Log.d("KRT", "EditAddressActivity - Call API Dictricts onFailure: " + t.getMessage());
+                Log.d("SV", "EditAddressActivity - Call API Dictricts onFailure: " + t.getMessage());
             }
         });
     }
@@ -522,15 +523,16 @@ public class EditAddressActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Wards wardsResponse = response.body();
                     wards = wardsResponse;
-                    Log.d("KRT", "EditAddressActivity - Call API Wards size: " + wards.getResults().size());
+                    txtEditPhuong.setEnabled(true);
+                    Log.d("SV", "EditAddressActivity - Call API Wards size: " + wards.getResults().size());
                 } else {
-                    Log.d("KRT", "EditAddressActivity - Call API Wards Not Success");
+                    Log.d("SV", "EditAddressActivity - Call API Wards Not Success");
                 }
             }
 
             @Override
             public void onFailure(Call<Wards> call, Throwable t) {
-                Log.d("KRT", "EditAddressActivity - Call API Wards onFailure: " + t.getMessage());
+                Log.d("SV", "EditAddressActivity - Call API Wards onFailure: " + t.getMessage());
             }
         });
     }
@@ -550,70 +552,14 @@ public class EditAddressActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    //    private class updateDiaChiAsync extends AsyncTask<String,Void,Integer>{
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected Integer doInBackground(String... strings) {
-//            final int[] kq = {0};
-//            DataService dataService = APIService.getService();
-//            Call<StringRequest> callBack = dataService.updateDiaChi(strings[0],strings[1],strings[2],strings[3],strings[4],strings[5],strings[6]);
-//            callBack.enqueue(new Callback<StringRequest>() {
-//                @Override
-//                public void onResponse(Call<StringRequest> call, Response<StringRequest> response) {
-//                    if(response.isSuccessful()){
-//                        StringRequest stringRequest = response.body();
-//                        if(stringRequest.getStatus().equals("1")){
-//                            Log.d("KRT","EditAddressAc - Sửa thành công");
-//                            kq[0] = 1;
-//                        }
-//                        else{
-//                            Log.d("KRT","EditAddressAc - Sửa không thành công");
-//                        }
-//                    }
-//                    else{
-//                        Log.d("KRT","EditAddressAc - Sửa lỗi Not Successful");
-//                    }
-//                }
-//                @Override
-//                public void onFailure(Call<StringRequest> call, Throwable t) {
-//                    Log.d("KRT","EditAddressAc - Sửa onFailure: " + t.getMessage());
-//                }
-//            });
-//            return kq[0];
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Integer integer) {
-//            Log.d("KRT","Onpost: " + integer);
-//            if(integer == 1){
-//                Intent intent = new Intent();
-//                intent.putExtra("Result",1);
-//                setResult(101,intent);
-//                finish();
-//                overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
-//            }else{
-//                Intent intent = new Intent();
-//                intent.putExtra("Result",0);
-//                setResult(101,intent);
-//                finish();
-//                overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
-//            }
-//        }
-//    }
     public void moveScreen() {
         if (mode == 0) {
             Intent intent = new Intent(EditAddressActivity.this, ChooseDeliveryInfoActivity.class);
-            intent.putExtra("MaKH", maKH);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         } else if (mode == 1) {
             Intent intent = new Intent(EditAddressActivity.this, ListAddressActivity.class);
-            intent.putExtra("MaKH", maKH);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();

@@ -104,19 +104,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 }
-                case R.id.mnNavNoti: {
-
-                    Fragment fragmentCheckNoti = getSupportFragmentManager().findFragmentByTag("Noti");
-                    if (fragmentCheckNoti == null) {
-                        if (getSupportActionBar() != null) {
-                            getSupportActionBar().setTitle(R.string.ttNoti);
-                            getSupportActionBar().show();
-                        }
-                        fragment = new NotificationFragment();
-                        displayFragment(fragment, "Noti");
-                    }
-                    return true;
-                }
                 case R.id.mnNavAccount: {
 
                     Fragment fragmentCheckAccount = getSupportFragmentManager().findFragmentByTag("Account");

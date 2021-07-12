@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,14 +44,12 @@ public class InfoUserActivity extends AppCompatActivity {
     TextView txtNgaySinhInfo;
     RadioButton rdBtnNamInfo, rdBtnNuInfo;
     Button btnLuuThongTinInfo;
-    Date dNgaySinh = null;
-
+    String maKH = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_user);
         //
-
         linkControl();
         //
         if (getSupportActionBar() != null) {
@@ -58,15 +57,16 @@ public class InfoUserActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Thông tin tài khoản");
         }
-        //
-//        if(getIntent().getStringExtra("MaKH") == null){
-//            finish();
-//        }
-//        else{
-//            maKH = getIntent().getStringExtra("MaKH");
-//        }
-        getTTKHByMaKH(loadPreferences("MaKH"));
-        Log.d("KRT", "InfoUserActivity - MaKH:" + loadPreferences("MaKH"));
+        if (loadPreferences("MaKH") == null) {
+            Intent intent = new Intent(InfoUserActivity.this, LoginActivity.class);
+            intent.putExtra("Mode", 0);
+            startActivity(intent);
+            finish();
+        } else {
+            maKH = loadPreferences("MaKH");
+        }
+        getTTKHByMaKH(maKH);
+        Log.d("SV", "InfoUserActivity - MaKH:" + loadPreferences("MaKH"));
         //
         txtNgaySinhInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +94,11 @@ public class InfoUserActivity extends AppCompatActivity {
                     return;
                 }
                 //
-                if (ngaySinh.isEmpty() || dNgaySinh == null) {
-                    txtNgaySinhInfo.setText("Chọn ngày sinh");
+                if (ngaySinh.isEmpty()) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(InfoUserActivity.this);
+                    alert.setTitle("Thông báo");
+                    alert.setMessage("Vui lòng chọn ngày sinh");
+                    alert.setNegativeButton("Đồng ý", null);
                     return;
                 }
                 //
@@ -113,22 +116,23 @@ public class InfoUserActivity extends AppCompatActivity {
                     alert.setTitle("Thông báo");
                     alert.setMessage("Vui lòng chọn giới tính");
                     alert.setNegativeButton("Đồng ý", null);
+                    return;
                 }
                 if (rdBtnNamInfo.isChecked()) {
                     gioiTinh = "Nam";
                 } else {
                     gioiTinh = "Nữ";
                 }
-                String maKH = "";
-                if (loadPreferences("MaKH") == null) {
-                    //
-                    return;
+
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date date = formatter.parse(ngaySinh);
+                    ngaySinh = dateFormat.format(date);
+                } catch (ParseException e) {
+                    ngaySinh = dateFormat.format(Calendar.getInstance().getTime());
                 }
-                maKH = loadPreferences("MaKH");
-                String strNgaySinh = "";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                strNgaySinh = simpleDateFormat.format(dNgaySinh);
-                Log.d("KRT", "InfoUserActivity - Info: " + maKH + " - " + hoTen + " - " + SDT + " - " + strNgaySinh + " - " + ngaySinh + " - " + gioiTinh);
+                Log.d("SV", "InfoUserActivity - Info: " + maKH + " - " + hoTen + " - " + SDT + " - " + ngaySinh + " - " + ngaySinh + " - " + gioiTinh);
                 //
                 ProgressDialog progressDialog = new ProgressDialog(InfoUserActivity.this);
                 progressDialog.show();
@@ -137,30 +141,29 @@ public class InfoUserActivity extends AppCompatActivity {
                 progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 //
                 DataService dataService = APIService.getService();
-                Call<StringRequest> callback = dataService.updateAccountInfo(maKH,hoTen,SDT,strNgaySinh,gioiTinh);
+                Call<StringRequest> callback = dataService.updateAccountInfo(maKH, hoTen, SDT, ngaySinh, gioiTinh);
                 callback.enqueue(new Callback<StringRequest>() {
                     @Override
                     public void onResponse(Call<StringRequest> call, Response<StringRequest> response) {
-                        if(response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             StringRequest request = response.body();
-                            if(request.getStatus().equals("1")){
+                            if (request.getStatus().equals("1")) {
                                 progressDialog.dismiss();
-                                Log.d("KRT", "InfoUserActivity- Sửa thành công");
-                            }else {
-                                Log.d("KRT", "InfoUserActivity- Sửa thất bại");
+                                Log.d("SV", "InfoUserActivity- Sửa thành công");
+                            } else {
+                                Log.d("SV", "InfoUserActivity- Sửa thất bại");
                             }
+                        } else {
+                            Log.d("SV", "InfoUserActivity- Connect not Success");
                         }
-                        else {
-                            Log.d("KRT", "InfoUserActivity- Connect not Success");
-                        }
-                        if(progressDialog.isShowing()){
+                        if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<StringRequest> call, Throwable t) {
-                        Log.d("KRT", "InfoUserActivity- Sửa TTKH onFailure "+t.getMessage());
+                        Log.d("SV", "InfoUserActivity- Sửa TTKH onFailure " + t.getMessage());
                     }
                 });
             }
@@ -188,79 +191,38 @@ public class InfoUserActivity extends AppCompatActivity {
                     edtEmailInfo.setText(khachHang.getEmail());
                     edtSDTInfo.setText(khachHang.getSdt());
                     txtNgaySinhInfo.setText(khachHang.getNgaySinh());
-//                    if(khachHang.getNgaySinh() != null){
-//                        try {
-//                            //
-//                            String pattern = "MM-dd-yyyy";
-//                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, new Locale("vi","VN"));
-//                            Date date = simpleDateFormat.parse("12/01/2018");
-//                            //
-//                            //dNgaySinh = new SimpleDateFormat("yyyy-MM-dd").parse("03/11/2000");
-//                            Log.d("KRT","Format date : " + date.toString());
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                            Log.d("KRT", e.getMessage());
-//                        }
-//                    }
-                    if (khachHang.getGioiTinh().equals("Nữ")) {
-                        rdBtnNuInfo.setChecked(true);
-                        rdBtnNamInfo.setChecked(false);
-                    } else if (khachHang.getGioiTinh().equals("Nam")) {
-                        rdBtnNamInfo.setChecked(true);
-                        rdBtnNuInfo.setChecked(false);
-                    } else{
+                    if (khachHang.getGioiTinh() == null) {
                         rdBtnNamInfo.setChecked(false);
                         rdBtnNuInfo.setChecked(false);
+                    } else {
+                        if (khachHang.getGioiTinh().equals("Nữ")) {
+                            rdBtnNuInfo.setChecked(true);
+                            rdBtnNamInfo.setChecked(false);
+                        } else if (khachHang.getGioiTinh().equals("Nam")) {
+                            rdBtnNamInfo.setChecked(true);
+                            rdBtnNuInfo.setChecked(false);
+                        }
                     }
                     progressDialog.dismiss();
                     //Log.d("KRT","InfoUserActivity -getTTKHByMaKH- MaKH:"+maKH);
-                    Log.d("KRT", "InfoUserActivity -getTTKHByMaKH- MaKH:" + khachHang.getMaKH());
+                    Log.d("SV", "InfoUserActivity -getTTKHByMaKH- MaKH:" + khachHang.getMaKH());
                 } else {
-                    Log.d("KRT", "InfoUserActivity - getTTKHByMaKH Not Success");
+                    Log.d("SV", "InfoUserActivity - getTTKHByMaKH Not Success");
                 }
-                if(progressDialog.isShowing()){
+                if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<KhachHang> call, Throwable t) {
-                Log.d("KRT", "InfoUserActivity - getTTKHByMaKH onFailure " + t.getMessage());
-
+                Log.d("SV", "InfoUserActivity - getTTKHByMaKH onFailure " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    getTTKHByMaKH(maKH);
+                }
             }
         });
     }
-//    public void updateAccountInfo(String MaKH, String hoTen, String SDT, String ngaySinh, String gioiTinh){
-//        DataService dataService = APIService.getService();
-//        Call<KhachHang> callback = dataService.updateAccountInfo(MaKH,hoTen,SDT,ngaySinh,gioiTinh);
-//        callback.enqueue(new Callback<KhachHang>() {
-//            @Override
-//            public void onResponse(Call<KhachHang> call, Response<KhachHang> response) {
-//                if(response.isSuccessful()){
-//                    KhachHang khachHang = response.body();
-//                    khachHang.setHoTen(edtHoVaTenInfo.getText().toString().trim());
-//                    khachHang.setSdt(edtSDTInfo.getText().toString().trim());
-//                    khachHang.setNgaySinh(txtNgaySinhInfo.getText().toString().trim());
-//                    if(rdBtnNamInfo.isChecked()){
-//                        khachHang.setGioiTinh("Nam");
-//                    }
-//                    else {
-//                        khachHang.setGioiTinh("Nữ");
-//                    }
-//                }
-//                else {
-//                    Log.d("KRT", "InfoUserActivity - updateAccountInfo Not Success");
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<KhachHang> call, Throwable t) {
-//                Log.d("KRT", "InfoUserActivity - updateAccountInfo onFailure "+t.getMessage());
-//
-//            }
-//        });
-//    }
 
     private void linkControl() {
         edtHoVaTenInfo = findViewById(R.id.edtHoVaTenInfo);
@@ -283,7 +245,7 @@ public class InfoUserActivity extends AppCompatActivity {
                 calendar.set(year, month, dayOfMonth);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 txtNgaySinhInfo.setText(simpleDateFormat.format(calendar.getTime()));
-                dNgaySinh = calendar.getTime();
+                Log.d("SV","GetDate: " + calendar.getTime().toString());
             }
         }, nam, thang, ngay);
         datePickerDialog.show();
@@ -297,7 +259,13 @@ public class InfoUserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        this.finish();
+        finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.enter_left_to_right, R.anim.exit_right_to_left);
     }
 
     @Override
@@ -311,14 +279,15 @@ public class InfoUserActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     //Kiểm tra email
-    public static boolean isValid(String email){
-        String emailRegex ="^[a-zA-Z0-9_+&*-]+(?:\\."   +
-                "[a-zA-Z0-9_+&*-]+)*@"                  +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z"             +
+    public static boolean isValid(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                 "A-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
-        if(email == null)
+        if (email == null)
             return false;
         return pattern.matcher(email).matches();
     }

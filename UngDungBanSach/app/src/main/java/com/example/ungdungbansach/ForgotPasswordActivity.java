@@ -74,7 +74,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                 if(quenMK.getHoTen() != null){
                                     hoTen = quenMK.getHoTen();
                                 }
-                                Log.d("KRT","ForgotPWActivity - Call API Status: " + quenMK.getStatus() + " - " + hoTen + " - " + quenMK.getEmail() + " - " + quenMK.getMatKhau());
+                                Log.d("SV","ForgotPWActivity - Call API Status: " + quenMK.getStatus() + " - " + hoTen + " - " + quenMK.getEmail() + " - " + quenMK.getMatKhau());
                                 new MailAPI(quenMK.getEmail(), Utils.tittle,Utils.createMessage(hoTen,quenMK.getMatKhau())).execute();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPasswordActivity.this);
                                 SpannableString title = new SpannableString("Thông báo");
@@ -97,15 +97,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             }
                             else if(quenMK.getStatus().equals("0")){
                                 showDialog("Tên đăng nhập không đúng. Vui lòng kiểm tra lại!");
-                                Log.d("KRT","ForgotPWActivity - Call API Status: " + quenMK.getStatus());
+                                Log.d("SV","ForgotPWActivity - Call API Status: " + quenMK.getStatus());
                             }
                             else{
                                 showDialog("Lỗi kết nối");
-                                Log.d("KRT","ForgotPWActivity - Call API Status: " + quenMK.getStatus() + " - loi connect");
+                                Log.d("SV","ForgotPWActivity - Call API Status: " + quenMK.getStatus() + " - loi connect");
                             }
                         }else{
                             showDialog("Lỗi kết nối");
-                            Log.d("KRT","ForgotPWActivity - Call API fail");
+                            Log.d("SV","ForgotPWActivity - Call API fail");
                         }
                         if(progressDialog.isShowing()){
                             progressDialog.dismiss();
@@ -114,7 +114,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<QuenMK> call, Throwable t) {
-                        Log.d("KRT","ForgotPWActivity - Call API onFailure: " + t.getMessage());
+                        Log.d("SV","ForgotPWActivity - Call API onFailure: " + t.getMessage());
                     }
                 });
 

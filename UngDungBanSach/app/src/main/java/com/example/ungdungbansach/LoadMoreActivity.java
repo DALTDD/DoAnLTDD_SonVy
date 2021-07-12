@@ -80,7 +80,7 @@ public class LoadMoreActivity extends AppCompatActivity {
         sachAdapterRecyclerView =  new SachAdapterRecyclerView(LoadMoreActivity.this, arrayList, new OnCallBack() {
             @Override
             public void onItemRecyclerViewClick(int position) {
-                Log.d("KRT","LoadMoreActivity - " + position + " - " + arrayList.get(position).getTenSach() + " Ma sach : " + arrayList.get(position).getMaSach());
+                Log.d("SV","LoadMoreActivity - " + position + " - " + arrayList.get(position).getTenSach() + " Ma sach : " + arrayList.get(position).getMaSach());
                 Intent intent = new Intent(LoadMoreActivity.this, DetailActivity.class);
                 intent.putExtra("maSach", arrayList.get(position).getMaSach());
                 startActivity(intent);
@@ -150,7 +150,7 @@ public class LoadMoreActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     ArrayList<SachLite> sachArrayList = (ArrayList<SachLite>) response.body();
                     if(sachArrayList != null){
-                        Log.d("KRT","LoadMoreActivity - Sách KM, Page: " + page + ", Size: " + sachArrayList.size());
+                        Log.d("SV","LoadMoreActivity - Sách KM, Page: " + page + ", Size: " + sachArrayList.size());
                         if(sachArrayList.size() == 0){
                             checkLast = true;
                             progressBar.setVisibility(View.GONE);
@@ -163,14 +163,17 @@ public class LoadMoreActivity extends AppCompatActivity {
                     }
                 }
                 else{
-                    Log.d("KRT","LoadMoreActivity - Sách KM, Not Success");
+                    Log.d("SV","LoadMoreActivity - Sách KM, Not Success");
                 }
                 checkLoad = true;
             }
 
             @Override
             public void onFailure(Call<List<SachLite>> call, Throwable t) {
-                Log.d("KRT","LoadMoreActivity - Sách KM, onFailure: " + t.getMessage());
+                Log.d("SV","LoadMoreActivity - Sách KM, onFailure: " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    loadSachKhuyenMai();
+                }
             }
         });
     }
@@ -184,7 +187,7 @@ public class LoadMoreActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     ArrayList<SachLite> sachArrayList = (ArrayList<SachLite>) response.body();
                     if(sachArrayList != null){
-                        Log.d("KRT","LoadMoreActivity - Sách mới, Page: " + page + ", Size: " + sachArrayList.size());
+                        Log.d("SV","LoadMoreActivity - Sách mới, Page: " + page + ", Size: " + sachArrayList.size());
                         if(sachArrayList.size() == 0){
                             checkLast = true;
                             progressBar.setVisibility(View.GONE);
@@ -197,14 +200,17 @@ public class LoadMoreActivity extends AppCompatActivity {
                     }
                 }
                 else{
-                    Log.d("KRT","LoadMoreActivity - Sách mới, Not Success");
+                    Log.d("SV","LoadMoreActivity - Sách mới, Not Success");
                 }
                 checkLoad = true;
             }
 
             @Override
             public void onFailure(Call<List<SachLite>> call, Throwable t) {
-                Log.d("KRT","LoadMoreActivity - Sách mới, onFailure: " + t.getMessage());
+                Log.d("SV","LoadMoreActivity - Sách mới, onFailure: " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    loadSachMoi();
+                }
             }
         });
     }
@@ -218,7 +224,7 @@ public class LoadMoreActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     ArrayList<SachLite> sachArrayList = (ArrayList<SachLite>) response.body();
                     if(sachArrayList != null){
-                        Log.d("KRT","LoadMoreActivity - Sách bán chạy, Page: " + page + ", Size: " + sachArrayList.size());
+                        Log.d("SV","LoadMoreActivity - Sách bán chạy, Page: " + page + ", Size: " + sachArrayList.size());
                         if(sachArrayList.size() == 0){
                             checkLast = true;
                             progressBar.setVisibility(View.GONE);
@@ -231,14 +237,17 @@ public class LoadMoreActivity extends AppCompatActivity {
                     }
                 }
                 else{
-                    Log.d("KRT","LoadMoreActivity - Sách bán chạy, Not Success");
+                    Log.d("SV","LoadMoreActivity - Sách bán chạy, Not Success");
                 }
                 checkLoad = true;
             }
 
             @Override
             public void onFailure(Call<List<SachLite>> call, Throwable t) {
-                Log.d("KRT","LoadMoreActivity - Sách bán chạy, onFailure: " + t.getMessage());
+                Log.d("SV","LoadMoreActivity - Sách bán chạy, onFailure: " + t.getMessage());
+                if(t.getMessage().equals("timeout")){
+                    loadSachBanChay();
+                }
             }
         });
     }
@@ -252,7 +261,7 @@ public class LoadMoreActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     ArrayList<SachLite> sachArrayList = (ArrayList<SachLite>) response.body();
                     if(sachArrayList != null){
-                        Log.d("KRT","LoadMoreActivity - Tất cả sách, Page: " + page + ", Size: " + sachArrayList.size());
+                        Log.d("SV","LoadMoreActivity - Tất cả sách, Page: " + page + ", Size: " + sachArrayList.size());
                         if(sachArrayList.size() == 0){
                             checkLast = true;
                             progressBar.setVisibility(View.GONE);
@@ -265,14 +274,15 @@ public class LoadMoreActivity extends AppCompatActivity {
                     }
                 }
                 else{
-                    Log.d("KRT","LoadMoreActivity - Tất cả sách, Not Success");
+                    Log.d("SV","LoadMoreActivity - Tất cả sách, Not Success");
                 }
                 checkLoad = true;
             }
 
             @Override
             public void onFailure(Call<List<SachLite>> call, Throwable t) {
-                Log.d("KRT","LoadMoreActivity - Tất cả sách, onFailure: " + t.getMessage());
+                Log.d("SV","LoadMoreActivity - Tất cả sách, onFailure: " + t.getMessage());
+                loadTatCaSach();
             }
         });
     }

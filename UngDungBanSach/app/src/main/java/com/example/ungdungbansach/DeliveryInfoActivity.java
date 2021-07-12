@@ -56,7 +56,6 @@ public class DeliveryInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery_info);
-        //
         //Thay doi mau Actionbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Thêm địa chỉ giao hàng");
@@ -97,7 +96,7 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                 } else {
                     txtQuan.setText("");
                     txtPhuong.setText("");
-                    txtQuan.setEnabled(true);
+                    //txtQuan.setEnabled(true);
                     txtPhuong.setEnabled(false);
                 }
             }
@@ -120,7 +119,7 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                     txtPhuong.setEnabled(false);
                 } else {
                     txtPhuong.setText("");
-                    txtPhuong.setEnabled(true);
+                    //txtPhuong.setEnabled(true);
                 }
             }
 
@@ -170,7 +169,7 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                             ResultCity resultCity = (ResultCity) arrayAdapter.getItem(position);
                             txtThanhPho.setText(resultCity.getName());
                             maThanhPho = resultCity.getCode();
-                            Log.d("KRT", "DeliveryInfoActivity - Ma thanh pho selected: " + maThanhPho);
+                            Log.d("SV", "DeliveryInfoActivity - Ma thanh pho selected: " + maThanhPho);
                             loadDataDictricts(maThanhPho);
                             //new loadDictrictsAsync().execute(maThanhPho);
                             dialog.dismiss();
@@ -225,7 +224,7 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                             ResultDictrict resultDictrict = (ResultDictrict) arrayAdapter.getItem(position);
                             txtQuan.setText(resultDictrict.getName());
                             maQuan = resultDictrict.getCode();
-                            Log.d("KRT", "DeliveryInfoActivity - Ma quan selected: " + maQuan);
+                            Log.d("SV", "DeliveryInfoActivity - Ma quan selected: " + maQuan);
                             loadDataWards(maQuan);
                             //new loadWardAsync().execute(maQuan);
                             dialog.dismiss();
@@ -281,7 +280,7 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                             ResultWard resultWard = (ResultWard) arrayAdapter.getItem(position);
                             txtPhuong.setText(resultWard.getName());
                             String ward = resultWard.getCode();
-                            Log.d("KRT", "DeliveryInfoActivity - Ma Phuong selected: " + ward);
+                            Log.d("SV", "DeliveryInfoActivity - Ma Phuong selected: " + ward);
                             dialog.dismiss();
                         }
                     });
@@ -382,12 +381,12 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                                 if (response.isSuccessful()) {
                                     StringRequest stringRequest = response.body();
                                     if (stringRequest.getStatus().equals("1")) {
-                                        Log.d("KRT", "DeliveryInfoActivity - Insert địa chỉ thành công");
+                                        Log.d("SV", "DeliveryInfoActivity - Insert địa chỉ thành công");
                                     } else {
-                                        Log.d("KRT", "DeliveryInfoActivity - Insert địa chỉ không thành công");
+                                        Log.d("SV", "DeliveryInfoActivity - Insert địa chỉ không thành công");
                                     }
                                 } else {
-                                    Log.d("KRT", "DeliveryInfoActivity - Insert địa chỉ không thành công - Not Success");
+                                    Log.d("SV", "DeliveryInfoActivity - Insert địa chỉ không thành công - Not Success");
                                 }
                                 progressDialog.dismiss();
                                 moveScreen();
@@ -395,7 +394,7 @@ public class DeliveryInfoActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<StringRequest> call, Throwable t) {
-                                Log.d("KRT", "DeliveryInfoActivity - Insert địa chỉ onFailure: " + t.getMessage());
+                                Log.d("SV", "DeliveryInfoActivity - Insert địa chỉ onFailure: " + t.getMessage());
                                 progressDialog.dismiss();
                                 moveScreen();
                             }
@@ -431,16 +430,16 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Citys citysResponse = response.body();
                     citys = citysResponse;
-                    Log.d("KRT", "DeliveryInfoActivity - Call API Citys size: " + citys.getResults().size());
+                    Log.d("SV", "DeliveryInfoActivity - Call API Citys size: " + citys.getResults().size());
                 } else {
-                    Log.d("KRT", "DeliveryInfoActivity - Call API Citys fail");
+                    Log.d("SV", "DeliveryInfoActivity - Call API Citys fail");
                 }
                 txtThanhPho.setEnabled(true);
             }
 
             @Override
             public void onFailure(Call<Citys> call, Throwable t) {
-                Log.d("KRT", "DeliveryInfoActivity - Call API Citys onFailure: " + t.getMessage());
+                Log.d("SV", "DeliveryInfoActivity - Call API Citys onFailure: " + t.getMessage());
             }
         });
     }
@@ -455,15 +454,16 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Dictricts dictrictsResponse = response.body();
                     dictricts = dictrictsResponse;
-                    Log.d("KRT", "DeliveryInfoAc - Call API Dictricts size: " + dictricts.getResults().size());
+                    txtQuan.setEnabled(true);
+                    Log.d("SV", "DeliveryInfoAc - Call API Dictricts size: " + dictricts.getResults().size());
                 } else {
-                    Log.d("KRT", "DeliveryInfoAc - Call API Dictricts fail");
+                    Log.d("SV", "DeliveryInfoAc - Call API Dictricts fail");
                 }
             }
 
             @Override
             public void onFailure(Call<Dictricts> call, Throwable t) {
-                Log.d("KRT", "DeliveryInfoAc - Call API Dictricts onFailure: " + t.getMessage());
+                Log.d("SV", "DeliveryInfoAc - Call API Dictricts onFailure: " + t.getMessage());
             }
         });
     }
@@ -478,15 +478,16 @@ public class DeliveryInfoActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Wards wardsResponse = response.body();
                     wards = wardsResponse;
-                    Log.d("KRT", "DeliveryInfoAc - Call API Wards size: " + wards.getResults().size());
+                    txtPhuong.setEnabled(true);
+                    Log.d("SV", "DeliveryInfoAc - Call API Wards size: " + wards.getResults().size());
                 } else {
-                    Log.d("KRT", "DeliveryInfoAc - Call API Wards fail");
+                    Log.d("SV", "DeliveryInfoAc - Call API Wards fail");
                 }
             }
 
             @Override
             public void onFailure(Call<Wards> call, Throwable t) {
-                Log.d("KRT", "DeliveryInfoAc - Call API Wards onFailure: " + t.getMessage());
+                Log.d("SV", "DeliveryInfoAc - Call API Wards onFailure: " + t.getMessage());
             }
         });
     }
@@ -593,13 +594,11 @@ public class DeliveryInfoActivity extends AppCompatActivity {
     public void moveScreen() {
         if (mode == 0) {
             Intent intent = new Intent(DeliveryInfoActivity.this, ChooseDeliveryInfoActivity.class);
-            intent.putExtra("MaKH",maKH);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         } else if (mode == 1) {
             Intent intent = new Intent(DeliveryInfoActivity.this, ListAddressActivity.class);
-            intent.putExtra("MaKH",maKH);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();

@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (response.isSuccessful()) {
                             Login login = response.body();
-                            Log.d("KRT", "LoginActivity - Status login: " + login.getStatus());
+                            Log.d("SV", "LoginActivity - Status login: " + login.getStatus());
                             if (login.getStatus().equals("1")) {
                                 savePreferences("TaiKhoan", edtTenDangNhapLogin.getText().toString().trim());
                                 savePreferences("MatKhau", edtMatKhauLogin.getText().toString().trim());
@@ -145,16 +145,16 @@ public class LoginActivity extends AppCompatActivity {
                                 alert.show().getWindow().setLayout(700, 500);
                             } else {
                                 Toast.makeText(LoginActivity.this, "Lỗi File Connect", Toast.LENGTH_SHORT).show();
-                                Log.d("KRT", "LoginActivity - Lỗi File Connect + " + login.getStatus() + login.getKhachHang().getEmail());
+                                Log.d("SV", "LoginActivity - Lỗi File Connect + " + login.getStatus() + login.getKhachHang().getEmail());
                             }
                         } else {
-                            Log.d("KRT", "LoginActivity - fail!");
+                            Log.d("SV", "LoginActivity - fail!");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Login> call, Throwable t) {
-                        Log.d("KRT", "LoginActivity - onFailure : " + t.getMessage());
+                        Log.d("SV", "LoginActivity - onFailure : " + t.getMessage());
                     }
                 });
             }
@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<Login> call, Response<Login> response) {
                     if(response.isSuccessful()){
                         Login login = response.body();
-                        Log.d("KRT", "LoginActivity - Login Preferences Status: "+login.getStatus());
+                        Log.d("SV", "LoginActivity - Login Preferences Status: "+login.getStatus());
                         if(login.getStatus().equals("1")){
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
@@ -210,14 +210,14 @@ public class LoginActivity extends AppCompatActivity {
                             clearPreferences();
                         }
                         else{
-                            Log.d("KRT", "LoginActivity - Login Preferences Status: "+login.getStatus() + " Loi file connect");
+                            Log.d("SV", "LoginActivity - Login Preferences Status: "+login.getStatus() + " Loi file connect");
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Login> call, Throwable t) {
-                    Log.d("KRT", "LoginActivity - Login Preferences onFailure: " + t.getMessage());
+                    Log.d("SV", "LoginActivity - Login Preferences onFailure: " + t.getMessage());
                 }
             });
         }
