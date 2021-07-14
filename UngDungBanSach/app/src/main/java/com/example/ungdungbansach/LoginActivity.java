@@ -186,42 +186,7 @@ public class LoginActivity extends AppCompatActivity {
         return p.getString(key, null);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (loadPreferences("TaiKhoan") != null && loadPreferences("MatKhau") != null) {
-            String taiKhoan = loadPreferences("TaiKhoan");
-            String matKhau = loadPreferences("MatKhau");
-            //Kiem tra
-            DataService dataService = APIService.getService();
-            Call<Login> callBack = dataService.loginAccount(taiKhoan,matKhau);
-            callBack.enqueue(new Callback<Login>() {
-                @Override
-                public void onResponse(Call<Login> call, Response<Login> response) {
-                    if(response.isSuccessful()){
-                        Login login = response.body();
-                        Log.d("SV", "LoginActivity - Login Preferences Status: "+login.getStatus());
-                        if(login.getStatus().equals("1")){
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else if(login.getStatus().equals("0")){
-                            clearPreferences();
-                        }
-                        else{
-                            Log.d("SV", "LoginActivity - Login Preferences Status: "+login.getStatus() + " Loi file connect");
-                        }
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<Login> call, Throwable t) {
-                    Log.d("SV", "LoginActivity - Login Preferences onFailure: " + t.getMessage());
-                }
-            });
-        }
-    }
     public void clearPreferences() {
         SharedPreferences p = getSharedPreferences("caches", Context.MODE_PRIVATE);
         SharedPreferences.Editor edCaches = p.edit();

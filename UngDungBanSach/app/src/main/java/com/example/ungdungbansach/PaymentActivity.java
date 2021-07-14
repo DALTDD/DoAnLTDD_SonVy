@@ -47,7 +47,7 @@ public class PaymentActivity extends AppCompatActivity {
     StateProgressBar stateProgressBar;
     ProgressBar pgBarPayment;
     RecyclerView rcPTTT,rcPTVC;
-    TextView txtThanhTienThanhToan, txtPhiVCThanhToan, txtTongTienThanhToan;
+    TextView txtThanhTienThanhToan, txtPhiVCThanhToan, txtTongTienThanhToan, txtGiaMienPhi;
     ArrayList<PhuongThucTT> arrLstPTTT;
     PTTTAdapter ptttAdapter;
     PhiVanChuyen phiVanChuyen;
@@ -113,7 +113,11 @@ public class PaymentActivity extends AppCompatActivity {
                     public void onRadioButtonClick(int position) {
                         maPTVC = phiVanChuyen.getPTVanChuyen().get(position).getMaPTVC();
                         loadGiaTriDonHang(Double.parseDouble(phiVanChuyen.getMienPhiVC()),Double.parseDouble(phiVanChuyen.getPTVanChuyen().get(position).getPhiVC()));
+                        Locale locale = new Locale("vi","VN");
+                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+                        txtGiaMienPhi.setText("Miễn phí cho đơn hàng từ " + numberFormat.format(Double.parseDouble(phiVanChuyen.getMienPhiVC())));
                         Toast.makeText(PaymentActivity.this, phiVanChuyen.getPTVanChuyen().get(position).getTenPTVC(), Toast.LENGTH_SHORT).show();
+
                     }
                 }, tinhThanhTienCart());
                 rcPTVC.setAdapter(ptvcAdapter);
@@ -153,6 +157,7 @@ public class PaymentActivity extends AppCompatActivity {
         txtPhiVCThanhToan = findViewById(R.id.txtPhiVCThanhToan);
         txtTongTienThanhToan = findViewById(R.id.txtTongTienThanhToan);
         btnThanhToanGiaoHang = findViewById(R.id.btnThanhToanGiaoHang);
+        txtGiaMienPhi = findViewById(R.id.txtGiaMienPhi);
     }
 
     public void loadDataPTTT(){

@@ -17,12 +17,9 @@
         </activity>
         <activity android:name=".OrderHistoryActivity" />
         <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".MyProfileActivity" />
         <activity android:name=".ListAddressActivity" />
         <activity android:name=".EditAddressActivity" />
         <activity android:name=".ChooseDeliveryInfoActivity" />
-        <activity android:name=".AddAddressActivity" />
-        <activity android:name=".SeeMoreActivity" />
         <activity android:name=".LoadMoreActivity" />
         <activity android:name=".CartActivity" />
         <activity android:name=".OrderSuccessActivity" />

@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.mnNavHome: {
                     if (getSupportActionBar() != null) {
                         //getSupportActionBar().setTitle("");
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         getSupportActionBar().hide();
                     }
                     Fragment fragmentCheckHome = getSupportFragmentManager().findFragmentByTag("Home");
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     if (fragmentCheckDashboard == null) {
                         if (getSupportActionBar() != null) {
                             getSupportActionBar().setTitle(R.string.ttDashboard);
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                             getSupportActionBar().show();
                         }
                         fragment = new DashboardFragment();
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     if (fragmentCheckCart == null) {
                         if (getSupportActionBar() != null) {
                             getSupportActionBar().setTitle(R.string.ttCart);
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                             getSupportActionBar().show();
                         }
                         fragment = new CartFragment();
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     if (fragmentCheckAccount == null) {
                         if (getSupportActionBar() != null) {
                             getSupportActionBar().setTitle(R.string.ttAccount);
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                             getSupportActionBar().show();
                         }
                         if (checkLogin()) {
