@@ -194,6 +194,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onFailure(Call<KhachHang> call, Throwable t) {
                 Log.d("SV", "AccountFragment - getTTKHByMaKH onFailure " + t.getMessage());
+                progressDialog.dismiss();
                 if(t.getMessage().equals("timeout")){
                     getTTKHByMaKH(maKH);
                 }

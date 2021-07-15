@@ -224,6 +224,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PhiVanChuyen> call, Throwable t) {
+                progressDialog.dismiss();
                 Log.d("SV","PaymentActivity - Call API PTVC onFailure : " + t.getMessage());
                 if(t.getMessage().equals("timeout")){
                 }

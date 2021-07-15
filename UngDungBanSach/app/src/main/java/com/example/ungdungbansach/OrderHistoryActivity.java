@@ -100,6 +100,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<DonHang>> call, Throwable t) {
+                progressDialog.dismiss();
                 Log.d("SV", "DetailActivity - Call API loadDataDonHang onFailure: " + t.getMessage());
                 if(t.getMessage().equals("timeout")){
                     loadDataDonHang();

@@ -31,4 +31,5 @@ public class TheLoaiAdapter extends ArrayAdapter<TheLoai> {
         txtTenTheLoai.setText(theLoai.getTenTheLoai());
         return convertView;
     }
+
 }

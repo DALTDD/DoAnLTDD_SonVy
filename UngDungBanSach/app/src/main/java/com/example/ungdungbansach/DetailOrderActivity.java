@@ -207,6 +207,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ChiTietDonHang> call, Throwable t) {
+                progressDialog.dismiss();
                 Log.d("SV","DetailOrderActivity - Call API load chi tiết đơn hàng onFailure:" + t.getMessage());
                 if(t.getMessage().equals("timeout")){
                     loadChiTietDH(maDH);
